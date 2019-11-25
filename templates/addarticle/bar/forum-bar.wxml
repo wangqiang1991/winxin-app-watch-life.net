@@ -1,0 +1,23 @@
+<!--
+/*
+ * 
+ * 微慕小程序
+ * author: jianbo
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.
+ *
+ */-->
+<view capture-bind:longpress="_onLongPress" capture-bind:touchmove="_onMove" capture-bind:touchend="_onMoveEnd" style="background:#{{bgcolor[opt]}};">
+  <slot></slot>
+  <view>
+    <!-- <text bindtap='_onTap' id="text">文字</text> |
+    <text id="image" bindtap='_onTap'>图片</text> |
+    <text id="sort" bindtap='_onTap' longpress="_onTap">排序</text> -->
+
+    <view class='btn'>
+      <view bindtap='_onTap' id="text" data-index="{{index}}">文字</view>
+      <view id="image" bindtap='_onTap' data-index="{{index}}">图片</view>
+    </view>
+  </view>
+</view>

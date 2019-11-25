@@ -1,12 +1,10 @@
 /*
  * 
- * WordPres版微信小程序
+ * 微慕小程序
  * author: jianbo
- * organization: 守望轩  www.watch-life.net
- * github:    https://github.com/iamxjb/winxin-app-watch-life.net
- * 技术支持微信号：iamxjb
- * 开源协议：MIT
- * Copyright (c) 2017 https://www.watch-life.net All rights reserved.
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.
  */
 
 function formatTime(date) {
@@ -27,14 +25,33 @@ function formatNumber(n) {
   return n[1] ? n : '0' + n
 }
 
+function getYear() {
+    var date = new Date();
+    var year = date.getFullYear(); 
+    return year
+}  
+
+function  formatDate (dt,fmt) {
+  var o = {
+      "M+": dt.getMonth() + 1, //月份 
+      "d+": dt.getDate(), //日 
+      "H+": dt.getHours(), //小时 
+      "m+": dt.getMinutes(), //分 
+      "s+": dt.getSeconds() //秒 
+      // "q+": dt.floor((dt.getMonth() + 3) / 3), //季度 
+      // "S": dt.getMilliseconds() //毫秒 
+  };
+  if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (dt.getFullYear() + "").substr(4 - RegExp.$1.length));
+  for (var k in o)
+  if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+  return fmt;
+}
+
+
 function obj2uri(obj) {
   return Object.keys(obj).map(function (k) {
     return encodeURIComponent(k) + '=' + encodeURIComponent(obj[k]);
   }).join('&');
-}
-
-function getStrLength(str){
-    return str.replace(/[\u0391-\uFFE5]/g, "aa").length;
 }
 
 
@@ -207,6 +224,14 @@ function GetUrlFileName(url,domain) {
     return filename;
 }
 
+function checkSessionExpire(sessionExpire)
+{
+  var curTime = new Date();
+  var expiretime = new Date(Date.parse(sessionExpire));
+  return (curTime>expiretime);
+
+}
+
 
 function json2Form(json) {
     var str = [];
@@ -234,46 +259,157 @@ function getymd(dateStr, type) {
     }
 }
 
-//绘制文字：文章题目、摘要、扫码阅读
-function drawTitleExcerpt(context, title, excerpt) {
-
-    context.setFillStyle("#000000");
-    context.setTextAlign('left');
-
-    if (getStrLength(title) <= 14) {
-        //14字以内绘制成一行，美观一点
-        context.setFontSize(40);
-        context.fillText(title, 40, 460);
-    }
-    else {
-        //题目字数很多的，只绘制前36个字（如果题目字数在15到18个字则也是一行，不怎么好看）
-        context.setFontSize(30);
-        context.fillText(title.substring(0, 19), 40, 460);
-        context.fillText(title.substring(19, 36), 40, 510);
-    }
-    context.setFontSize(24);
-    context.setTextAlign('left');
-    context.setGlobalAlpha(0.7);    
-    for (var i = 0; i <= 50; i += 20) {
-        //摘要只绘制前50个字，这里是用截取字符串
-        if (getStrLength(excerpt)>50)
-        {
-            if ( i == 40) {
-                context.fillText(excerpt.substring(i, i + 20) + "...", 40, 570 + i * 2);
-            }
-            else {
-                context.fillText(excerpt.substring(i, i + 20), 40, 570 + i * 2);
-            }
-        }
-        else
-        {
-            context.fillText(excerpt.substring(i, i + 20), 40, 570 + i * 2);
-        }
-    }
-
-    context.stroke();
-    context.save();
+function mapHttpToHttps(rawUrl) {
+  if (rawUrl.indexOf(':') < 0) {
+      return rawUrl;
+  }
+  const urlComponent = rawUrl.split(':');
+  if (urlComponent.length === 2) {
+      if (urlComponent[0] === 'http') {
+          urlComponent[0] = 'https';
+          return `${urlComponent[0]}:${urlComponent[1]}`;
+      }
+  }
+  return rawUrl;
 }
+
+//获取文章的第一个图片地址,如果没有给出默认图片
+function getContentFirstImage(content) {
+    var regex = /<img.*?src=[\'"](.*?)[\'"].*?>/i;
+    var arrReg = regex.exec(content);
+  var src = "../../images/uploads/default_image.jpg";
+    if (arrReg) {
+        src = arrReg[1];
+    }
+    return src;
+}
+//获取链接的参数值
+function GetQueryString(url,name){
+  var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+    var num=url.indexOf("?")
+    var url=url.substr(num+1);
+     var r = url.match(reg);//search,查询？后面的参数，并匹配正则
+     if(r!=null)return  unescape(r[2]); return "";
+
+}
+
+function getUrlInfo(url)
+{
+  var args={};  
+  var qqhttp_m = RegExp(/http\:\/\/m\.v\.qq\.com\/(.*?)\//)
+  var qqhttps_m = RegExp(/https\:\/\/m\.v\.qq\.com\/(.*?)\//)
+  var qqhttps_pc=RegExp(/https\:\/\/v\.qq\.com\/(.*?)\//)
+  var miaopai = RegExp(/http\:\/\/n\.miaopai\.com\/media\/(.*?)\.htm/)
+  var douyin = RegExp(/http\:\/\/v\.douyin\.com\/(.*?)\//)
+  var weibo= RegExp(/https\:\/\/m\.weibo\.cn\/(.*?)\/(.*?)/);
+
+  var toutiaocdn = RegExp(/https\:\/\/m\.toutiaocdn\.com\/(.*?)/)
+
+  var toutiao_m = RegExp(/https\:\/\/m\.toutiao\.com\/(.*?)/)
+  var toutiao_pc = RegExp(/https\:\/\/www\.toutiao\.com\/(.*?)/)
+
+  if(qqhttp_m.exec(url) || qqhttps_m.exec(url))
+  {
+    args.infoType="video_qq_m";
+    args.infoDesc="腾讯视频链接"; 
+    args.infoUrl=url;
+
+  }
+  else if(qqhttps_pc.exec(url) )
+  {
+    args.infoType="video_qq_pc";
+    args.infoDesc="腾讯视频链接"; 
+    args.infoUrl=url;
+
+  }
+  else  if (miaopai.exec(url)) {
+    args.infoType="video_miaopai";
+    args.infoDesc="秒拍视频链接"; 
+    args.infoUrl=url;
+  }  
+  else if (douyin.exec(url)) {
+    var douyinID = url.match(/http\:\/\/v\.douyin\.com\/(.*?)\//);
+    var douyinUrl = "http://v.douyin.com/" + douyinID[1]+"/"    
+    args.infoType="video_douyin";
+    args.infoDesc="抖音视频链接"; 
+    args.infoUrl=douyinUrl; 
+
+  }
+  else  if(weibo.exec(url)) 
+  {
+    args.infoType="weibo";
+    args.infoDesc="微博链接"; 
+    args.infoUrl=url;
+  }
+
+  else  if(toutiaocdn.exec(url) || toutiao_m.exec(url) || toutiao_pc.exec(url) ) 
+  {
+    args.infoType="toutiao";
+    args.infoDesc="头条链接"; 
+   // url = url.replace("m.toutiao.com","www.toutiao.com");
+    args.infoUrl=url;
+  }
+  
+  
+  else {
+     args.infoUrl="";
+     args.infoType="";
+     args.infoDesc="";
+  }
+
+  return args;
+
+}
+
+/* 裁剪封面，
+   src为本地图片路径或临时文件路径，
+   imgW为原图宽度，
+   imgH为原图高度，   
+*/
+function clipImage (src, imgW, imgH,appPage,ctx) { 
+  let canvasW = 640, canvasH = imgH;
+  if (imgW / imgH > 5 / 4) { // 长宽比大于5:4
+    canvasW = imgH * 5 / 4;
+  }
+
+  // 将图片绘制到画布
+  ctx.drawImage(src, (imgW - canvasW) / 2, 0, canvasW, canvasH, 0, 0, canvasW, canvasH) 
+// draw()必须要用到，并且需要在绘制成功后导出图片
+ ctx.draw(false, () => {
+    setTimeout(() => {
+      //  导出图片
+      wx.canvasToTempFilePath({
+        width: canvasW,
+        height: canvasH,
+        destWidth: canvasW,
+        destHeight: canvasH,
+        canvasId: 'mycanvas',
+        fileType: 'jpg',
+        success: (res) => {
+          // res.tempFilePath为导出的图片路径
+          var imagePath=res.tempFilePath;
+          //return imagePath;
+          appPage.setData({"shareImagePath":imagePath});
+          console.log(imagePath);
+        },
+        fail:(res)=>{        
+          console.log(res);
+        }
+      })
+      
+    }, 1000);
+  })
+}
+
+function getExtname(filename){
+  if(!filename||typeof filename!='string'){
+     return false
+  };
+  let a = filename.split('').reverse().join('');
+  let b = a.substring(0,a.search(/\./)).split('').reverse().join('');
+  return b
+}
+
 
 module.exports = {
   formatTime: formatTime,
@@ -289,8 +425,16 @@ module.exports = {
   json2Form: json2Form,
   getymd: getymd,
   getDateOut:getDateOut,
-  drawTitleExcerpt: drawTitleExcerpt,
-  getStrLength: getStrLength
+  getYear:getYear,
+  getContentFirstImage: getContentFirstImage,
+  checkSessionExpire:checkSessionExpire,
+  mapHttpToHttps:mapHttpToHttps,
+  clipImage:clipImage,
+  GetQueryString:GetQueryString,
+  getUrlInfo:getUrlInfo,
+  getExtname:getExtname,
+  formatDate:formatDate
+  
   
 }
 

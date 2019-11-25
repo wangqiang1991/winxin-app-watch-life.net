@@ -1,13 +1,18 @@
 /*
  * 
- * WordPres版微信小程序
+ * 微慕小程序
  * author: jianbo
- * organization: 守望轩  www.watch-life.net
- * github:    https://github.com/iamxjb/winxin-app-watch-life.net
- * 技术支持微信号：iamxjb
- * 开源协议：MIT
- * Copyright (c) 2017 https://www.watch-life.net All rights reserved.
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.
  */
+
+@import "../../templates/articleList/rightThumbnailArticle.wxss";
+@import "../../templates/articleList/leftThumbnailArticle.wxss";
+@import "../../templates/articleList/upBigImageArticle.wxss";
+@import "../../templates/articleList/noImageArticle.wxss";
+@import "../../templates/articleList/multipleImageArticle.wxss";
+
 
 .list-header {
   padding: 50rpx 0;
@@ -20,74 +25,93 @@
   margin-bottom: 48rpx;
 }
 
-/*topic list*/
-
-.topic-common-list {
-
-}
+/* 当列表为分类时 */
 
 .topic-list-item {
   position: relative;
-
   overflow: hidden;
-  clear: both;
-
-  margin-bottom: 30rpx;
-  background: #fff;
+  background: #f4f6f9;
 }
 
 .topic-list-item  image.cover {
+  display: block;
   width: 100%;
-  height: 375rpx;
-  filter: blur(4px);
+  height: 180rpx;
+  filter: brightness(88%);
 }
 
-.topic-content-title {
-  padding: 16rpx 0rpx;
+.topic-item-content {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  vertical-align: middle;
+  width: 90%;
+}
+
+.topic-content-brief {
+  font-size: 30rpx;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #fff;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
-  position: absolute;
-  /* border-bottom: 1px solid #fff; */
-  z-index: 2;
-  left: 60rpx;
-  top: 120rpx;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  margin-bottom: 16rpx;
 }
 
-.topic-content-title text {
-  font-size: 48rpx;
-  line-height: 48rpx;
+.topic-content-num {
+  font-size: 24rpx;
+  line-height: 24rpx;
   color: #fff;
+  margin-bottom: 24rpx;
 }
 
-.topic-content-title-line{
+.topic-content-btn button {
+  width: 140rpx;
+  height: 56rpx;
+  font-size: 26rpx;
+  line-height: 46rpx;
+  font-weight: 500;
+  color: #fff;
+  border: 4rpx #fff solid;
+  border-radius: 28rpx;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.topic-content-btn button::after {
+  display: none;
+}
+
+.topic-content-title-line {
   width: 48px;
   padding: 16rpx 0rpx;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   position: absolute;
-  border-bottom: 1px solid #fff; 
+  border-bottom: 1px solid #fff;
   z-index: 2;
   left: 64rpx;
   top: 180rpx;
 }
 
-
 .topic-content-brief {
-  /* padding: 0rpx 30rpx 30rpx; */
+  /* padding: 0rpx 30rpx 30rpx; 
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
-  position: absolute;
-  z-index: 2;
-  left: 60rpx;
-  top: 240rpx;
+  white-space: nowrap;*/
+  margin-bottom: 24rpx;
 }
 
 .topic-content-brief text {
-  font-size: 32rpx;
-  line-height: 32rpx;
+  font-size: 30rpx;
+  line-height: 30rpx;
   color: #fff;
 }
 

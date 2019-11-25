@@ -1,0 +1,156 @@
+<!--
+/*
+ * 
+ * 微慕小程序
+ * author: jianbo
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.
+ *
+ */-->
+<!-- 排序开始 -->
+<import src="../../templates/login-popup.wxml" />
+<import src="../../templates/goodsCategory/goodsCategory.wxml" />
+<view class="sort-page main {{sortPage ? '' :'none'}} ">
+  <view class='head-sort'>
+    <button class='head-sort-btn' bindtap='sortSuccBtn'>完成</button>
+    <text>拖住可调整上下文位置</text>
+  </view>
+
+  <view style="position: relative; z-index: 199;">
+
+    <view class="touchView" style="height:{{scrollPosition.scrollViewHeight}}px;" catchtouchstart="draggleTouch" catchtouchmove="draggleTouch" catchtouchend="draggleTouch">
+    </view>
+
+    <movable-area class="moveable_row {{movableViewPosition.className}}" style="height: {{scrollPosition.scrollViewHeight}}px;">
+      <movable-view style="height: {{scrollPosition.everyOptionCell}}px; width: 100%; background-color: #fff;" direction="vertical" x="{{movableViewPosition.x}}" y="{{movableViewPosition.y}}" inertia="false" damping="9999" friction="9999">
+        <view wx:if="{{movableViewPosition.data.type == 'text'}}" class='section'>
+          <text>{{movableViewPosition.data.decode.alt}}</text>
+          <view class='section-move' data-seccode="{{movableViewPosition.data.sDtSecCode}}">
+            <image mode='widthFix' src='../../images/sort.png'></image>
+          </view>
+        </view>
+        <view wx:else class='section imgs'>
+          <image mode='center' src='{{movableViewPosition.data.decode.src}}'></image>
+          <view class='section-move imgs-bg' data-seccode="{{movableViewPosition.data.sDtSecCode}}">
+            <image mode='widthFix' src='../../images/sort2.png'></image>
+          </view>
+        </view>
+      </movable-view>
+    </movable-area>
+
+    <scroll-view scroll-y="{{scrollPosition.scrollY}}" style="height: {{scrollPosition.scrollViewHeight}}px;" bindscroll="bindscroll">
+      <block wx:for="{{optionsListData}}" wx:key="sDtSecCode">
+
+        <view wx:if="{{item.type == 'text'}}" class='section {{item.selectClass}}'>
+          <text>{{item.decode.alt}}/{{sortPage2}}</text>
+          <view class='section-move'>
+            <image mode='widthFix' src='../../images/sort3.png'></image>
+          </view>
+        </view>
+
+        <view wx:else class='section imgs {{item.selectClass}} '>
+          <image mode='center' src='{{item.decode.src}}'></image>
+          <!-- <text><image mode='center' src='http://i2.dd-img.com/upload/2017/0711/1499731771122.jpg'></image></text> -->
+          <view class='section-move imgs-bg'>
+            <image mode='widthFix' src='../../images/sort4.png'></image>
+          </view>
+        </view>
+      </block>
+    </scroll-view>
+
+  </view>
+</view>
+<!--排序结束-->
+
+<view class="main {{sortPage ? 'none' :''}} {{tagsPage ? 'none' :''}}">
+  <form report-submit="true" catchsubmit="publishArticle" style="display:{{showCategoryPop?'none':'block'}}">
+    <view class='cover'>
+      <view class='excerpt-title'><text></text>标题</view>
+      <view class='cover-content'>
+        <input placeholder='请输入标题' bindinput='bindTitle' placeholder-style="color:#ccc"></input>
+      </view>
+
+  
+
+      <view class="goods-message-main">
+          <view class='excerpt-title'><text></text>商品信息</view>
+          <view class="goods-main-box">
+              <view class="goods-main-title">产品基础信息</view>
+              <view class='goods-form-item'>
+                <input placeholder='产品卖点:如量大从优' maxlength='50' bindinput='bindSalesInfo' placeholder-style="color:#999"></input>
+              </view>
+              <view class='goods-form-item'>
+                <input placeholder='联系电话:如13300000000' maxlength='11' bindinput='bindLinkUrl' placeholder-style="color:#999"></input>
+              </view>
+              <view class='goods-form-item'>
+                <input placeholder='产品价格:如15.8' maxlength='10' bindinput='bindGoodsPrice' placeholder-style="color:#999"></input>
+              </view>
+              <view class="upload-goods-image">
+                <view class="goods-upload-box">
+                  <image wx:if="{{!args.goodsCover}}" src="../../images/uploads/upload_defult_img.png"></image>
+                  <image wx:if="{{args.goodsCover}}" src="{{args.goodsCover}}"></image>
+                </view>
+                <view class="goods-upload-right">
+                  <view bindtap="goodsCoverImage">上传产品主图</view>
+                  <text>尺寸：450px * 450px，实时显示图片</text>
+                </view>
+              </view>
+              <view class="goods-main-title">产品规则</view>
+              <view class='goods-form-item'>
+                <input placeholder='产品规格:如25Kg/包' maxlength='50' bindinput='bindGoodsSpec' placeholder-style="color:#999"></input>
+              </view>
+              <view class='goods-form-item'>
+                <input placeholder='公司名称' maxlength='50' bindinput='bindComName' placeholder-style="color:#999"></input>
+              </view>
+              <view class='goods-form-item'>
+                <input placeholder='发货地址' maxlength='50' bindinput='bindAeaeInfo' placeholder-style="color:#999"></input>
+              </view>
+             
+          </view>
+      </view>
+
+      <view class="tags">
+        <view class='tags-explain'><text></text>选择分类</view>
+        <view class='tags-category' hidden="{{categoryName==''?true:false}}">
+          <text>{{categoryName}}</text>
+        </view>
+        <view class='tags-btn' bindtap='categoryBtn'>#添加分类#</view>
+      </view>
+
+    </view>
+
+
+    <forum-form>
+      <forum-bar wx:for="{{contents}}" wx:key="{{index}}" class="bar-{{item.type}}" bind:barevent="_barEvent" id="{{index}}" bind:drag="_onMoveEvent" bind:moveend="_onMoveEndEvent">
+        <forum-image wx:if="{{item.type=='img'}}" bind:_onchangeimg="_onchangeimg" bindinput="_bindTextinput" bind:deleteEvent="_deleteEvent" src="{{item.decode.src}}" islode="{{item.decode.islode}}" value="{{item.decode.alt}}" id="{{index}}" hasDel="{{contents.length>1?true:false}}"></forum-image>
+        <forum-text wx:else bind:deleteEvent="_deleteEvent" bindinput="_bindTextinput" value="{{item.decode.alt}}" id="{{index}}" hasDel="{{contents.length>1?true:false}}"></forum-text>
+      </forum-bar>
+    </forum-form>
+
+   
+
+    <view class='footerbtn'>
+      <button class='footerbtn-sort' bindtap='sortBtn'>排序</button>
+      <button class='footerbtn-publist' disabled="{{pubDisabled}}" formType="submit">立即提交</button>
+    </view>
+
+
+  </form>
+
+</view>
+
+
+
+<forum-tags class="{{tagsPage ? '' :'none'}}" bind:_onBackBtn="_onBackBtn" bind:tagchange="_bindTagChange" bind:_bindFormSubmit="_bindFormSubmit"></forum-tags>
+
+<template is="login-popup" data="{{show:isLoginPopup,userInfo:userInfo}}"></template>
+
+
+<van-popup show="{{ showCategoryPop }}" position="left" overlay="{{ true }}" z-index="99999" voverlay-style="#000000" bind:close="onClose">
+
+  <template is="goodsCategory" data="{{columns:columns,columnItemHeight:columnItemHeight,moveToIndex:moveToIndex,moveToIndex1:moveToIndex1,windowHeight:windowHeight}}" />
+</van-popup>
+
+<l-toast />
+<l-dialog />

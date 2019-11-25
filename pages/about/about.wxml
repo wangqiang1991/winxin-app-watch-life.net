@@ -1,56 +1,62 @@
 <!--
 /*
  * 
- * WordPres版微信小程序
+ * 微慕小程序
  * author: jianbo
- * organization: 守望轩  www.watch-life.net
- * github:    https://github.com/iamxjb/winxin-app-watch-life.net
- * 技术支持微信号：iamxjb
- * 开源协议：MIT
- * Copyright (c) 2017 https://www.watch-life.net All rights reserved.
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.
  *
  */-->
-<import src="../../wxParse/wxParse.wxml" />
+<import src="../../vendor/wxParse/wxParse.wxml" />
 <import src="../../templates/header.wxml" />
 <import src="../../templates/copyright.wxml" />
-<import src="../../templates/login-popup.wxml" />
 
 <view class="container" style="display:{{display}}">
-    <template is="tempHeader" />
-
-    <view class="wrapper">
-        <view class="excerpt">
-            <!--  <rich-text nodes="{{pageData.content.rendered}}"></rich-text> -->
-            <template is="wxParse" data="{{wxParseData:article.nodes}}" />
-
-        </view>
- <template is="login-popup" data="{{show: isLoginPopup, userInfo: userInfo}}"></template>
-     
-        <view style='text-align:center'>
-            <button class="gotowebpage-button" formType="submit" size="mini" bindtap="gotowebpage">打开“守望轩”网站</button>
-            <modal title="{{dialog.title}}" hidden="{{dialog.hidden}}" no-cancel bindconfirm="confirm">{{dialog.content}}</modal>
-        </view>
-        <view class="praisePost">
-            <view style='text-align:center'>
-                <button class="praise-button" formType="submit" size="mini" bindtap="praise">捐赠</button>
-
-                <modal title="{{dialog.title}}" hidden="{{dialog.hidden}}" no-cancel bindconfirm="confirm">{{dialog.content}}</modal>
-            </view>
-            <view class="praiseTitle">
-                <view style='margin-top: 15rpx;'>
-                    <text>谢谢以下鼓励或捐赠的朋友</text>
-                </view>
-            </view>
-            <view class="praiseText">
-                <block wx:key="id" wx:for="{{praiseList}}">
-                    <image src="{{item}}" class="gravatarLikeImg"></image>
-                </block>
-            </view>
-        </view>
+  <view class="wrapper">
+    <view class="excerpt">
+      <!--  <rich-text nodes="{{pageData.content.rendered}}"></rich-text> -->
+      <template is="wxParse" data="{{wxParseData:article.nodes}}" />
     </view>
-   
-      <view class="copyright">
-        <template is="tempCopyright" />
+
+  </view>
+  <view class="nexcontactbd" wx:if="{{pageDetail.raw_qyname}}">
+    <view class="nexcontgh">
+      <!--联系我们调用插口-->
+      <!-- <view class="nexconpic" bindtap='openMap'>
+        <map id="myMap" style="width: 100%; height: 420rpx;" latitude="{{pageDetail.raw_latitude}}" longitude="{{pageDetail.raw_longitude}}" markers="{{markers}}" show-location></map>
+      </view> -->
+      <view class='bottom-contact-container'>
+
+
+        <text class='nexindex_name '>{{pageDetail.raw_qyname}}</text>
+
+        <view class="nexindex_adds li1" bindtap='openMap'>地址：{{pageDetail.raw_address}}</view>
+        <view class="nexindex_tel li1" bindtap='phoneCall'>电话：{{pageDetail.raw_tel}}</view>
+        <view class="nexindex_email li1">邮箱：{{pageDetail.raw_email}}</view>
+
+        <view class='contact-container'>
+          <view class='contact-item'>
+            <image src='../../images/icon-wechat.png'></image>
+
+            <button class="share-button" open-type="contact">
+            </button>
+          </view>
+          <view class='contact-item' bindtap='phoneCall'>
+            <image src='../../images/icon-phone.png'></image>
+
+          </view>
+          <view class='contact-item' bindtap='openMap'>
+            <image src='../../images/Map.png'></image>
+
+          </view>
+        </view>
+
+      </view>
+      <view class="clear"></view>
     </view>
+  </view>
+
+
 
 </view>

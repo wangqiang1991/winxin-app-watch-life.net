@@ -1,0 +1,9 @@
+{
+    "enablePullDownRefresh": true,
+    "backgroundTextStyle": "dark",
+    "usingComponents": {
+      "l-tabs": "../../vendor/LinUI/tabs/index",
+      "l-tabpanel": "../../vendor/LinUI/tabpanel/index",
+      "l-dialog": "../../vendor/LinUI/dialog/index"
+    }
+}

@@ -1,0 +1,36 @@
+<!--
+/*
+ * 
+ * 微慕小程序
+ * author: jianbo
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.
+ *
+ */-->
+
+<import src="../../templates/header.wxml"/>
+<import src="../../templates/copyright.wxml" />
+
+<view class="readlog-container">
+  <template is="tempHeader" /> 
+
+  <view class='title'>请选择鼓励的金额</view>
+
+  <view class="price-list">
+    <view class="item" wx:for="{{praiseMoney}}" wx:key="item" data-item="{{item}}" bindtap="selectItem">
+      <view class="price-box {{selected==item?'active':''}}">
+        <em><text class="price">{{item}}</text>  元</em> 
+      </view>
+    </view>
+  </view>
+
+ <view style="text-align: center">
+  <button class="cancel-button" formType="submit" bindtap="cancel">取消</button>
+ </view>
+
+ <view class="detail-copyright">
+            <template is="tempCopyright" />
+ </view>
+
+</view>

@@ -1,0 +1,25 @@
+<!--
+/*
+ * 
+ * 微慕小程序
+ * author: jianbo
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.
+ *
+ */-->
+
+  <!-- <textarea value="{{content}}" placeholder="在这里输入内容" placeholder-style="color:#333333" maxlength="220" auto-focus="true" auto-height="true" fixed="true" style="border:1px #999999 solid; height:200rpx"></textarea> -->
+
+
+    <view class='content'>
+      <view class='content-title'><text></text>内容介绍</view>
+      <view class='content-intro'>
+        <textarea placeholder='请输入内容' maxlength='-1'  bindinput='_bindinput' placeholder-style="color:#ccc" value="{{value}}"></textarea>
+          <!-- <image mode='widthFix'  wx:if="{{inputValue != ''}}"    src='http://i1.dd-img.com/assets/image/1514519559-a5c9b6ea92a4df0e-28w-28h.png' bindtap='_onDelete'></image> -->
+           <image  wx:if="{{hasDel}}" mode='widthFix' src='../../../images/deleteconcent.png' bindtap='_onDelete'></image>
+      </view>
+    </view> 
+
+   
+

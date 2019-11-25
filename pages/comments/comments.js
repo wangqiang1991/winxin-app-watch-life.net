@@ -1,21 +1,16 @@
 /*
  * 
- * WordPres版微信小程序
+ * 微慕小程序
  * author: jianbo
- * organization: 守望轩  www.watch-life.net
- * github:    https://github.com/iamxjb/winxin-app-watch-life.net
- * 技术支持微信号：iamxjb
- * 开源协议：MIT
- * 
- *  *Copyright (c) 2017 https://www.watch-life.net All rights reserved.
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.
  */
 
-var Api = require('../../utils/api.js');
-var util = require('../../utils/util.js');
-var WxParse = require('../../wxParse/wxParse.js');
-var wxApi = require('../../utils/wxApi.js')
-var wxRequest = require('../../utils/wxRequest.js')
-
+const API = require('../../utils/api.js')
+const Auth = require('../../utils/auth.js')
+const Adapter = require('../../utils/adapter.js')
+const util = require('../../utils/util.js');
 import config from '../../utils/config.js'
 var pageCount = config.getPageCount;
 
@@ -24,11 +19,12 @@ Page({
         title: '最新评论列表',
         showerror: "none",
         showallDisplay: "block",
-        readLogs: []
+        readLogs: [],
+        commentsList:[]
 
     },
     onShareAppMessage: function () {
-        var title = "分享"+config.getWebsiteName+"的最新评论";
+        var title = config.getWebsiteName+"的最新评论";
         var path = "pages/comments/comments";
         return {
             title: title,
@@ -41,18 +37,7 @@ Page({
             }
         }
     },
-    reload: function (e) {
-        var self = this;
-        this.setData({
-            readLogs: []
-        });
-        self.setData({            
-            showallDisplay: "none",
-            showerror: "none",
-
-        });
-        self.fetchCommentsData();
-    },
+    
     onLoad: function (options) {
         var self = this;
         self.fetchCommentsData();
@@ -64,45 +49,18 @@ Page({
             title: '正在加载',
             mask: true
         });
-        var getNewComments = wxRequest.getRequest(Api.getNewComments());
-        getNewComments.then(response => {
-            if (response.statusCode == 200) {
-                this.setData({
-                    readLogs: self.data.readLogs.concat(response.data.map(function (item) {
-                        item[0] = item.post;
-                        item[1] = util.removeHTML(item.content.rendered + '(' + item.author_name + ')');
-                        item[2] = "0";
-                        return item;
-                    }))
-                });
-                self.setData({
-                    showallDisplay: "block"
-                });
-                
-            }
-            else {
-                console.log(response);
-                this.setData({
-                    showerror: 'block'
-                });
 
-            }
-        }).catch(function () {
-                self.setData({
-                    showerror: "block",
-                    floatDisplay: "none"
-                });
-
-            })
-            .finally(function () {
-                wx.hideLoading();
-            })
+        let args ={};        
+        args.limit =30;
+        args.page=1;
+        args.flag="newcomment"
+        Adapter.loadComments(args,this,API);
     },
     // 跳转至查看文章详情
     redictDetail: function (e) {
         // console.log('查看文章');
-        var id = e.currentTarget.id,
-            url = '../detail/detail?id=' + id;
+        var id = e.currentTarget.dataset.postid;
+        var url = '../detail/detail?id=' + id;
         wx.navigateTo({
             url: url
         })
@@ -110,7 +68,7 @@ Page({
     onPullDownRefresh: function () {
         var self = this;
         this.setData({
-            readLogs: []
+            commentsList: []
         });
         self.setData({
             showallDisplay: "none",

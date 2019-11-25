@@ -1,0 +1,197 @@
+<!--
+/*
+ * 
+ * 微慕小程序
+ * author: jianbo
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.
+ *
+ */-->
+
+<import src="../../templates/copyright.wxml" />
+<import src="../../templates/login-popup.wxml" />
+
+
+<!-- 用户头像、昵称 -->
+<view class="userinfo">
+
+  <view class="userinfo-profile">
+    <view class="userinfo-avatar" wx:if="{{userInfo.avatarUrl}}">
+      <image src="{{userInfo.avatarUrl}}" background-size="cover"></image>
+    </view>
+    <view class="userinfo-nickname-container">
+      <view class="userinfo-nickname">
+        <text bindtap="{{userInfo.isLogin?'':'openLoginPopup'}}">{{userInfo.nickName}}</text>
+      </view>
+      <view class="userinfo-rights">
+        <view class="userinfo-member">
+          <text>{{memberUserInfo.membername || '角色'}}</text>
+        </view>
+        <view>积分
+          <text>{{memberUserInfo.integral || 0}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  <!-- 赚取积分 -->
+
+  <view class="btn-signin" data-mytype="mysignin" bindtap="redictPage">
+    <image class="icon-signin" src="../../images/icon-jifen-small.png"></image>
+    <text>赚积分</text>
+  </view>
+
+
+</view>
+<!-- 帖子、文章、粉丝、关注 -->
+<view class="user-data">
+  <view class="user-data-box">
+    <view data-mytype="mytopics" bindtap="redictPage">
+      <text>{{memberUserInfo.topiccount || 0}}</text>
+      <text class="user-data-title">帖子</text>
+    </view>
+    <view data-mytype="myposts" bindtap="redictPage">
+      <text>{{memberUserInfo.postcount || 0}}</text>
+      <text class="user-data-title">文章</text>
+    </view>
+    <view data-mytype="myGoods" bindtap="redictPage">
+      <text>{{memberUserInfo.productcount || 0}}</text>
+      <text class="user-data-title">商品</text>
+    </view>
+    <view data-mytype="followmeAuthor" bindtap="redictPage">
+      <text>{{memberUserInfo.followmecount || 0}}</text>
+      <text class="user-data-title">粉丝</text>
+    </view>
+    <view data-mytype="myFollowAuthor" bindtap="redictPage">
+      <text>{{memberUserInfo.myfollowcount || 0}}</text>
+      <text class="user-data-title">关注</text>
+    </view>
+  </view>
+</view>
+
+<!-- 九宫格 -->
+<view class="ninebox">
+  <view class="ninebox-item" data-mytype="mytopics" bindtap="redictPage">
+    <image src="../../images/publish.png"></image>
+    <text>我的发布</text>
+  </view>
+
+  <view class="ninebox-item" data-mytype="myreads" bindtap="redictPage">
+    <image src="../../images/liulan.png"></image>
+    <text>我的浏览</text>
+  </view>
+
+  <view class="ninebox-item" data-mytype="mycomments" bindtap="redictPage">
+    <image src="../../images/pinglun.png"></image>
+    <text>我的评论</text>
+  </view>
+
+  <view class="ninebox-item" data-mytype="mylikes" bindtap="redictPage">
+    <image src="../../images/dianzan.png"></image>
+    <text>我的点赞</text>
+  </view>
+
+  <view class="ninebox-item" data-mytype="mypraises" bindtap="redictPage">
+    <image src="../../images/zanshang.png"></image>
+    <text>我的鼓励</text>
+  </view>
+
+  <!-- <view wx:if="{{system=='Android'}}" class="ninebox-item" data-mytype="myorders" bindtap="redictPage"> -->
+  <view class="ninebox-item" data-mytype="myorders" bindtap="redictPage">
+    <image src="../../images/zhangdan.png"></image>
+    <text>我的账单</text>
+  </view>
+
+  <view class="ninebox-item" data-mytype="myIntegral" bindtap="redictPage">
+    <image src="../../images/jifen.png"></image>
+    <text>我的积分</text>
+  </view>
+
+  <view class="ninebox-item" data-mytype="myzanimage" bindtap="redictPage">
+    <image src="../../images/zanshangma.png"></image>
+    <text>{{raw_praise_word}}码</text>
+  </view>
+
+  <view class="ninebox-item" data-mytype="myMessages" bindtap="redictPage">
+    <image src="../../images/yuyue.png"></image>
+    <text>我的合作</text>
+  </view>
+
+  <view class="ninebox-item">
+    <image src="../../images/quanxian.png"></image>
+    <button class="btn-SubscribeMessage" catchtap="openSettting">
+      权限设置
+    </button>
+  </view>
+
+</view>
+
+<view class="listBox">
+  <!-- 订阅消息 -->
+  <view class="listSubBox subscribe" wx:if="{{memberUserInfo}}">
+    <view class="listItem-subscribe" wx:if="{{memberUserInfo.raw_new_post_message_id !=''}}">
+      <text>内容更新消息</text>
+      <view class="subscribe-tip">
+        <text>已订阅{{memberUserInfo.newcontentSubscribeCount || 0}}次</text>
+        <view data-subscribetype="newcontent" data-subscribemessagesid="{{memberUserInfo.raw_new_post_message_id}}" bindtap="subscribeMessage" wx:if="{{memberUserInfo.raw_new_post_message_id !=''}}">订阅</view>
+      </view>
+    </view>
+
+    <view class="listItem-subscribe news" wx:if="{{memberUserInfo.raw_new_replay_message_id !=''}}">
+      <view class="subscribe-news-box">
+        <text>新的评论消息</text>
+        <view>文章或帖子被评论</view>
+      </view>
+      <view class="subscribe-tip">
+        <text>已订阅{{memberUserInfo.newreplaySubscribeCount || 0}}次</text>
+        <view data-subscribetype="newreplay" data-subscribemessagesid="{{memberUserInfo.raw_new_replay_message_id}}" bindtap="subscribeMessage" wx:if="{{memberUserInfo.raw_new_replay_message_id !=''}}">订阅</view>
+      </view>      
+    </view>    
+  </view>
+
+  <!-- 管理员权限 -->
+  <view class="listSubBox admin" wx:if="{{memberUserInfo.member =='00'}}">
+    <view class="listItem" data-mytype="topicspending" bindtap="redictPage">
+      <view>待审核话题</view>
+    </view>
+
+    <view class="listItem" data-mytype="replyspending" bindtap="redictPage">
+      <view>待审核话题回复</view>
+    </view>
+
+    <view class="listItem" data-mytype="postspending" bindtap="redictPage">
+      <view>待审核文章</view>
+    </view>
+
+    <view class="listItem" data-mytype="commentspending" bindtap="redictPage">
+      <view>待审核文章评论</view>
+    </view>
+
+  </view>
+  <!-- 设置服务 -->
+  <view class="listSubBox sets">
+    <view class="listItem" data-mytype="logout" bindtap="redictPage">
+      <text>清除缓存</text>
+    </view>
+
+    <view class="listItem" data-mytype="about" bindtap="redictPage">
+      <view>关于我们</view>
+    </view>
+
+    <view class="listItem" id="myadvice">
+      <button open-type="feedback">意见反馈</button>
+    </view>
+
+    <view class="listItem">
+      <button open-type="contact">在线客服</button>
+    </view>
+  </view>
+
+
+  <view class="copyright">
+    <template is="tempCopyright" data="{{copyright}}" />
+  </view>
+
+</view>
+
+<template is="login-popup" data="{{show:isLoginPopup,userInfo:userInfo}}"></template>

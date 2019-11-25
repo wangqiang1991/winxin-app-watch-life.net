@@ -1,0 +1,37 @@
+<view class="videoitem" wx:for="{{videoList}}" wx:key="{{index}}">
+  <!-- 视频 -->
+  <navigator url="../author/author?userid={{item.post_author}}&postype=topic" open-type="navigate" class="palydata">
+    <text class="title ">{{item.post_parent_title}}</text>
+    <text class="palynum">39次播放</text>
+  </navigator>
+
+  <view class="videobox">
+
+
+    <video id="{{item.post_title}}" show-mute-btn="false" poster="" controls="true" class="video" src="{{item.guid}}" data-id="{{item.id}}" bindplay="handlePlay"  bindpause="handlePause"></video>
+
+
+
+  </view>
+  <!-- 用户 -->
+  <view class="userbox">
+    <navigator url="../author/author?userid={{item.post_author}}&postype=topic" open-type="navigate" class="entry-author-info" hover-class="none">
+      <view class="user">
+        <image src="{{item.author_avatar}}" class="portrait"></image>
+        <text>{{item.username}}</text>
+      </view>
+
+    </navigator>
+    <view class="right">
+      <view class="comment">
+        <!-- <image src="../../images/social_icon_comment.png"></image> -->
+        <text>{{item.date}}</text>
+      </view>
+
+        <image src="../../images/videoshare.png" class="icon-share"></image>
+      
+    </view>
+  </view>
+   <button class="btn-share" open-type="share"></button>
+  <navigator url="../author/author?userid={{item.post_author}}&postype=topic" open-type="navigate" class="videocover" wx:if="{{!item.isPlay}}"></navigator>
+</view>

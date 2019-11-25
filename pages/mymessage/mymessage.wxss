@@ -1,0 +1,52 @@
+/* pages/mymessage/mymessage.wxss */
+
+.mymessage-container {
+  padding: 0 24rpx;
+  border-top: 24rpx rgb(228, 227, 227) solid;
+    font-size: 30rpx;
+  color: #333;
+    line-height: 1.8;
+}
+
+.message {
+  margin-bottom: 16rpx;
+  padding: 0 24rpx 8rpx;
+}
+
+.reply {
+  padding: 0 24rpx 24rpx;
+  background-color: #f5f7f7;
+  margin-bottom: 24rpx;
+  border-radius: 16rpx;
+}
+
+.title-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 26rpx;
+  color: #3a3838;
+  height: 88rpx;
+  /*border-bottom: 1rpx rgb(228, 227, 227) solid;*/
+margin-bottom: 16rpx;
+}
+.replytext{
+  color:rgb(112, 113, 114);
+  font-size: 26rpx;
+}
+.title {
+  font-weight: 600;
+  font-size: 30rpx;
+}
+.goto-btn{
+  height: 60rpx;
+  width: 200rpx;
+  line-height: 60rpx;
+  border-radius: 44rpx;
+  background-color: #0095ff;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 30rpx;
+  color: #fff;
+  margin: 100rpx auto 0;
+}

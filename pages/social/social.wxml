@@ -1,0 +1,140 @@
+<!--
+/*
+ * 
+ * 微慕小程序
+ * author: jianbo
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.
+ *
+ */-->
+
+<import src="../../templates/loading/threepoint.wxml" />
+<import src="../../templates/copyright.wxml" />
+<import src="../../vendor/wxParse/wxParse.wxml" />
+<import src="../../templates/login-popup.wxml" />
+<import src="../../templates/socials/socials.wxml" />
+
+
+
+<l-tabs bind:linchange="changeTabs" animated="{{true}}" equal-width="{{false}}" swipeable="{{false}}">
+  <l-tabpanel tab="最新" key="one" slot="one">
+    <view class="tab-content">
+      <view class="container">
+        <!-- 进入地图 -->
+        <view class="map" catchtap="openweizhi">
+          <image src="../../images/uploads/social-map.jpg" mode="aspectFill"></image>
+        </view>
+        <!-- 精选圈子 -->
+        <view class="selected-nav" wx:if="{{forums.length !== 0}}">
+          <view class='common-subtitle'>
+            <view class='common-subtitle-left'>精选圈子</view>
+            <view style="margin-right:0;" class='common-subtitle-right'>滑动查看</view>
+          </view>
+          <scroll-view scroll-x="true">
+            <view class="selected-nav-list">
+              <view class="selected-nav-item" bindtap="toQuanziList" wx:for="{{forums}}" data-forumid="{{item.id}}" wx:key="{{id}}">
+                <view>
+                  <image mode="aspectFill" src="{{item.cover}}"></image>
+                </view>
+                <view>
+                  <text>{{item.title}}</text>
+                </view>
+              </view>
+            </view>
+          </scroll-view>
+
+        </view>
+
+        <view>
+          <view class="showerror" style="display:{{isError?'block':'none'}}">
+            <image src="../../images/cry80.png" style="height:100rpx;width:100rpx"></image>
+            <view class="errortext">
+              暂时无法访问网络,下拉重试...
+            </view>
+          </view>
+
+          <template is="socials" data="{{topicsList:topicsList,isPlaying:isPlaying,dataId:dataId,userSession:userSession,memberUserInfo:memberUserInfo,topiclistAdId:topiclistAdId,topiclistAd:topiclistAd,topiclistAdEvery:topiclistAdEvery,topicListAdsuccess:topicListAdsuccess,listType:'topicList'}}"
+          />
+
+          <view style='display:{{isLoading?"block":"none"}}'>
+            <template is="threepoint" />
+          </view>
+
+          <view class="no-more" style="display:{{isLastPage?'block':'none'}}">-到底啦-</view>
+          <view class="copyright">
+            <template is="tempCopyright" data="{{copyright}}" />
+          </view>
+        </view>
+
+      </view>
+    </view>
+  </l-tabpanel>
+  <block wx:if="{{userSession !='' && userSession.sessionId !=''}}">
+    <l-tabpanel tab="关注" key="two" slot="two">
+      <view class="tab-content">
+
+        <template is="socials" data="{{topicsList:authorTopicsList,isPlaying:isPlaying,dataId:dataId,userSession:userSession,memberUserInfo:memberUserInfo,topiclistAdId:topiclistAdId,topiclistAd:topiclistAd,topiclistAdEvery:topiclistAdEvery,topicListAdsuccess:topicListAdsuccess,listType:'authorTopicsList'}}"
+        />
+      </view>
+    </l-tabpanel>
+  </block> 
+  <l-tabpanel tab="朋友" key="four" slot="four">
+    <view class="userlist">
+      <view wx:for="{{authorList}}" wx:key="{{index}}" class="userlist-item">
+        <view>
+          <image src="{{item.avatarurl}}" catchtap="redictAuthorDetail" id="{{item.post_author}}" />
+        </view>
+        <view class="userlist-right">
+          <view class="userlist-name" catchtap="redictAuthorDetail" id="{{item.post_author}}">
+            <view>{{item.nickname}}</view>
+            <view class="userlist-data">
+              <text>文章{{item.postcount}}</text>
+              <text>话题{{item.topiccount}}</text>
+              <text>粉丝 {{item.followmecount}}</text>
+              <text>关注 {{item.myfollowcount}}</text>
+            </view>
+          </view>
+
+          <view wx:if="{{item.post_author !=userSession.userId}}" class="userlist-btn" data-listType="authorList" data-follow="{{item.follow}}" data-authorid="{{item.post_author}}" catchtap="followAuthor">
+            <block wx:if="{{item.follow=='false'}}">
+              <text class="btn-follow">关注</text>
+            </block>
+            <block wx:else>
+              <block wx:if="{{item.followeachoher=='true'}}">
+                <text class="btn-follow-eachother">相互关注</text>
+              </block>
+              <block wx:else>
+                <text class="btn-followed">已关注</text>
+              </block>
+            </block>
+          </view>
+        </view>
+      </view>
+    </view>
+  </l-tabpanel>    
+  <!-- <l-tabpanel tab="标签" key="five" slot="five">
+  <view class='tagsname-container'>
+        <block wx:key="id" wx:for="{{tagsList}}">
+          <view class="tagsname">
+            <navigator url="../list/list?tag={{item.id}}&tagname={{item.name}}" open-type="navigate" hover-class="relatedNavigator">
+              <view class='tagsname-name'>#{{item.name}}</view>
+            </navigator>
+          </view>
+        </block>
+      </view>
+  </l-tabpanel> -->
+</l-tabs>
+
+<image class="tab-search-btn" bindtap="openSearch" src="../../images/tab-search-btn.png"></image>
+
+<template is="login-popup" data="{{show:isLoginPopup,userInfo:userInfo}}"></template>
+
+<!-- 发布按钮 -->
+<view style="display:{{showAddbtn?'block':'none'}}">
+  <view class="posts" bindtap="sendPost">
+    <image class="addpost" src="../../images/column-upload-pic.png"></image>
+  </view>
+</view>
+
+<l-dialog />

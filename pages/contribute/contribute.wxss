@@ -1,0 +1,115 @@
+/*
+ * 
+ * 微慕小程序
+ * author: jianbo
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.
+ */
+
+.contribute-container {
+  background-color: #f5f7f7;
+}
+
+.article-container {
+  width: 100%;
+  background-color: #fff;
+  padding: 80rpx 0 32rpx 0;
+}
+
+.article {
+  margin: 0 48rpx;
+}
+
+.title {
+  height: 80rpx;
+  border-bottom: 2rpx solid #eee;
+  font-size: 40rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.main-body {
+  height: 400rpx;
+  border: 2rpx solid #eee;
+  padding: 12rpx;
+  font-size: 30rpx;
+  color: #333;
+  margin-top: 24rpx;
+}
+
+.upload-pic {
+  display: flex;
+  flex-direction: row;
+  /* justify-content:center; */
+  align-items: center;
+  font-size: 26rpx;
+  color: #333;
+  margin-left: 48rpx;
+  height: 100rpx;
+}
+
+.upload-pic image {
+  width: 30rpx;
+  height: 30rpx;
+  margin-right: 12rpx;
+}
+
+.article-container2 {
+  height: 200rpx;
+  background-color: #fff;
+  margin: 24rpx 0;
+  padding: 0 48rpx;
+}
+
+.me-item-gap {
+  height: 1rpx;
+  background-color: #eee;
+}
+
+.me-item-detail {
+  height: 100rpx;
+  line-height: 100rpx;
+  display: flex;
+  justify-content: space-between;
+}
+
+.me-item-detail text {
+  font-size: 30rpx;
+  color: #495056;
+}
+
+.me-item-detail image {
+  width: 20rpx;
+  height: 28rpx;
+  margin: 36rpx 0;
+}
+
+.author {
+  font-size: 30rpx;
+  color: #333;
+  height: 100rpx;
+  margin-top: 10rpx;
+  margin-left: 0;
+}
+
+.btn-area {
+  background-color: #fff;
+  height: 120rpx;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  box-shadow: 0 0 6px rgba(30, 20, 20, 0.1);
+}
+
+.btn-submit {
+  width: 638rpx;
+  height: 88rpx;
+  border-radius: 0;
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #fff;
+  background-color: #118fff;
+  margin-top: 16rpx;
+  line-height: 88rpx;
+}

@@ -1,0 +1,44 @@
+<!--
+/*
+ * 
+ * 微慕小程序
+ * author: jianbo
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.
+ *
+ */-->
+
+<template name="downBigImageArticle">
+  <view class="downBigImageArticle-common-list">
+    <block wx:key="id" wx:for="{{articlesList}}">
+
+      <view class="list-item-ad" index="{{index}}" wx:if="{{index%item.listAdEvery ==0  && index!=0 && item.listAd =='1' && item.listAdId !=''  && listAdsuccess}}">
+        <ad unit-id="{{item.listAdId}}" ad-intervals="30" binderror="listAdbinderror"></ad>
+      </view>
+      <view class="list-item has-img" index="{{index}}" data-posttype="{{item.postType}}" id="{{item.id}}"  data-weixinmptype="{{item.raw_weixinmp_type}}" data-weixinmpurl="{{item.raw_weixinmp_url}}" bindtap="redictDetail">
+
+        <view class="content-title">
+          <text class="content-title-word">{{item.title.rendered}}</text>
+        </view>
+
+        <view class="content-date">
+          <image src="../../images/calendar.png"></image>
+          <text>{{item.post_date}}</text>
+          <image src="../../images/comments.png"></image>
+          <text class="">{{item.total_comments}}</text>
+          <image src="../../images/pageviews.png"></image>
+          <text class="">{{item.pageviews}}</text>
+          <image src="../../images/home-like.png"></image>
+          <text class="">{{item.like_count}}</text>
+        </view>
+
+        <view class='common-list-img'>
+          <image src="{{item.post_large_image}}" mode="aspectFill" class="cover"></image>
+        </view>
+
+      </view>
+    </block>
+  </view>
+
+</template>

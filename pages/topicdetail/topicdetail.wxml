@@ -1,0 +1,110 @@
+<!--
+/*
+ * 
+ * 微慕小程序
+ * author: jianbo
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.
+ *
+ */-->
+
+<import src="../../vendor/wxParse/wxParse.wxml" />
+<import src="../../templates/header.wxml" />
+<import src="../../templates/copyright.wxml" />
+<import src="../../templates/login-popup.wxml" />
+
+
+<view class="container">
+  <view class="topicdetail-container">
+    <!--scroll-view style="height:{{scrollHeight}}px;" scroll-y="true" lower-threshold="100rpx"-->
+
+    <view class="content-article-detail">
+      <view class="entry-title">
+        {{detail.title}}
+      </view>
+      <view class="topicmata">
+        <text class="toptime">{{detail.post_date}}</text>
+        <text class="topwz">{{detail.user_nicename}}</text>
+      </view>
+      <view class="entry-summary">
+        <template is="wxParse" data="{{wxParseData:article.nodes}}" />
+      </view>
+
+      <!--占位行-->
+      <!-- <view class="lie"></view> -->
+
+    </view>
+
+    <view class='tagsname-container'>
+    <block wx:key="id" wx:for="{{detail.tag_name}}">
+      <view class="tagsname">
+        <navigator url="../list/list?tag={{item.term_id}}&tagname={{item.name}}" open-type="navigate" hover-class="relatedNavigator">
+          <view class="tagsname-text">#{{item.name}}</view>
+        </navigator>
+      </view>
+    </block>
+  </view>
+
+    <view>
+      <modal title="{{dialog.title}}" hidden="{{dialog.hidden}}" no-cancel bindconfirm="confirm">{{dialog.content}}</modal>
+    </view>
+
+  </view>
+
+  <view>
+    <view wx:if="{{detail.total_replies != 0}}" class="replytitle">
+      <text>* {{detail.total_replies}}条回复</text>
+    </view>
+    <view wx:elif="{{detail.total_replies == 0}}" class="replytitle">
+      <text>* 请在下方发表评论消灭0回复</text>
+    </view>
+    <!-- 加载回复列表 -->
+    <block wx:key="id" wx:for="{{repliesList}}">
+      <view class="content" wx:for-index="id" index="{{index}}">
+        <!--头像-->
+        <view class="head">
+        
+          <block wx:if="{{item.author_avatar}}">
+            <image src="{{item.author_avatar}}" class="baseimg"></image>
+          </block>
+         
+        </view>
+        <!--昵称-->
+        <text class="wz">{{item.author_name}}</text>
+        <!--内容-->
+        <rich-text class="desc" nodes="{{item.content}}"></rich-text>
+        <!--显示时间-->
+        <text class="time">{{item.post_date}}</text>
+        
+      </view>
+    </block>
+  </view>
+
+  <view class="copyright">
+    <template is="tempCopyright" data="{{copyright}}" />
+  </view>
+
+
+  <view class="comment-fixed" hidden="{{detail.enableComment=='1'?false:true}}">
+    <form catchsubmit="replySubmit" report-submit="true">
+      <view class="comment-respond">
+        <input class="comment-input" maxlength="200" name="inputTopicID" value="{{detail.id}}" style="display:none" />
+
+        <view class="comment-box">
+          <image src="../../images/entry-home.png" class="img-plus" catchtap="goHome"></image>
+          <input class="comment-input" type='text' confirm-type="done" cursor-spacing="10" maxlength="100" value="{{content}}" name="inputComment" placeholder="{{placeholder}}" />
+          <button class="comment-button touch-active" formType="submit">发送</button>
+          <!-- <view class="comment-share-view"> -->
+            <button class="share-button" openType="share" plain="true">
+            <image src="../../images/entry-share.png" class="img-share" mode=""></image>
+            </button>
+          <!-- </view> -->
+        </view>
+      </view>
+    </form>
+  </view>
+
+
+  <template is="login-popup" data="{{show:isLoginPopup,userInfo:userInfo}}"></template>
+</view>

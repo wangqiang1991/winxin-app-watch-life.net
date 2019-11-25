@@ -1,0 +1,248 @@
+<!--
+/*
+ * 
+ * 微慕小程序
+ * author: jianbo
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.
+ *
+ */-->
+
+<import src="../../vendor/wxParse/wxParse.wxml" />
+<import src="../../templates/header.wxml" />
+<import src="../../templates/copyright.wxml" />
+<import src="../../templates/loading/threepoint.wxml" />
+<import src="../../templates/detail/iconbar.wxml" />
+<import src="../../templates/detail/toolbar.wxml" />
+<import src="../../templates/socials/replayTopicList.wxml" />
+<import src="../../templates/login-popup.wxml" />
+<import src="../../templates/modal-view/modal-view.wxml" />
+<view class="detail-container">
+  <view class="content-article-detail" style="display:{{display?'block':'none'}}">
+    <view class="topic-avatar-container">
+      <view>
+        <navigator url="../author/author?userid={{detail.author_id}}&postype=topic" open-type="navigate" hover-class="none">
+          <image class="topic-avatar" src="{{detail.author_avatar}}"></image>
+        </navigator>
+      </view>
+
+      <view class="topic-author-container">
+        <navigator url="../author/author?userid={{detail.author_id}}&postype=topic" open-type="navigate" hover-class="none">
+          <text class="topic-author-text">{{detail.author_name}}</text>
+        </navigator>
+
+        <text class="topic-time-text">{{detail.post_date}}</text>
+      </view>
+    </view>
+
+    <!-- 音频播放动画 -->
+    <view class="audio-box" wx:if="{{detail.audioUrl !=''}}">
+      <!-- 暂停时 -->
+      <view class="btn-audio-play" data-audioUrl="{{detail.audioUrl}}" bindtap="playRemoteAudio" wx:if="{{isPlaying == 0}}"></view>
+      <view class='audio-stop-list' data-audioUrl="{{item.audioUrl}}" bindtap="playRemoteAudio" wx:if="{{isPlaying == 0}}">
+        <view class="item nine"></view>
+        <view class="item eight"></view>
+        <view class="item seven"></view>
+        <view class="item six"></view>
+        <view class="item five"></view>
+        <view class="item four"></view>
+        <view class="item three"></view>
+        <view class="item two"></view>
+        <view class="item one"></view>
+        <view class="item two"></view>
+        <view class="item three"></view>
+        <view class="item four"></view>
+        <view class="item five"></view>
+        <view class="item six"></view>
+        <view class="item seven"></view>
+        <view class="item eight"></view>
+        <view class="item nine"></view>
+      </view>
+      <!-- 播放时 -->
+      <view class="btn-audio-stop" bindtap="stopRemoteAudio" wx:if="{{isPlaying == 1}}">
+      </view>
+      <view class='audio-play-list' bindtap="stopRemoteAudio" wx:if="{{isPlaying == 1}}">
+        <view class="item ninth"></view>
+        <view class="item eighth"></view>
+        <view class="item seventh"></view>
+        <view class="item sixth"></view>
+        <view class="item fifth"></view>
+        <view class="item fourth"></view>
+        <view class="item third"></view>
+        <view class="item second"></view>
+        <view class="item first"></view>
+        <view class="item second"></view>
+        <view class="item third"></view>
+        <view class="item fourth"></view>
+        <view class="item fifth"></view>
+        <view class="item sixth"></view>
+        <view class="item seventh"></view>
+        <view class="item eighth"></view>
+        <view class="item ninth"></view>
+      </view>
+      <view class="audio-time">{{detail.audioPlayTime || 0}}"</view>
+    </view>
+
+
+
+
+
+    <view class="entry-summary">
+      <template is="wxParse" data="{{wxParseData:article.nodes}}" />
+    </view>
+    <!-- 地理位置 -->
+    <view wx:if="{{detail.address !=''}}" bindtap="openmap" data-lat="{{detail.latitude}}" data-address="{{detail.address}}" data-lng="{{detail.longitude}}" class="address">位置：{{detail.address}}</view>
+
+    <view class="wxParse-video" wx:if="{{vid !=''}}">
+      <txv-video vid="{{vid}}" playerid="id{{item.id}}" width="100%" height="100%" autoplay="{{false}}">
+      </txv-video>
+    </view>
+  </view>
+  <view class='tagsname-container'>
+    <block wx:key="id" wx:for="{{detail.tag_name}}">
+      <view class="tagsname">
+        <navigator url="../sociallist/sociallist?tag={{item.term_id}}&tagname={{item.name}}" open-type="navigate" hover-class="relatedNavigator">
+          <view class="tagsname-text">#{{item.name}}</view>
+        </navigator>
+      </view>
+    </block>
+  </view>
+
+
+  <view style="display:{{display?'block':'none'}}">
+    <view class="file-list">
+      <view catchtap="open_link_doc" class="file-list-item" wx:if="{{detail.fileLink !=''}}">
+        <view wx:if="{{detail.fileType=='pdf'}}">
+          <image src="../../images/pdf.png" />
+        </view>
+        <view wx:elif="{{detail.fileType=='doc'}}">
+          <image src="../../images/doc.png" />
+        </view>
+        <view wx:elif="{{detail.fileType=='docx'}}">
+          <image src="../../images/docx.png" />
+        </view>
+        <view wx:elif="{{detail.fileType=='ppt'}}">
+          <image src="../../images/ppt.png" />
+        </view>
+        <view wx:elif="{{detail.fileType=='pptx'}}">
+          <image src="../../images/pptx.png" />
+        </view>
+        <view wx:elif="{{detail.fileType=='xls'}}">
+          <image src="../../images/xls.png" />
+        </view>
+        <view wx:elif="{{detail.fileType=='xlsx'}}">
+          <image src="../../images/xlsx.png" />
+        </view>
+        <view class="file-list-right">
+          <view class="file-list-content">{{detail.fileName}}</view>
+          <view class="file-list-des">
+            <text catchtap="open_link_doc">打开</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+
+
+    <!-- <view class="like-container" hidden="{{detail.like_count == '0'?true:false}}">
+      <view class="title-style">
+        <view class="title-style-line"></view>
+        <view class="relatedTitle">
+          点赞
+        </view>
+        <view class="likeTitle">
+          <text>{{detail.like_count}}人已赞</text>
+        </view>
+        <view class="likeTitle-img">
+          <image src="{{likeIcon}}" class="img-like" id="liketop" catchtap="postLike"></image>
+        </view>
+      </view>
+
+      <view class="likeText">
+        <block wx:key="id" wx:for="{{detail.avatarurls}}">
+          <image src="{{item}}" class="gravatarLikeImg"></image>
+        </block>
+      </view>
+    </view> -->
+
+
+    <!-- 点赞 -->
+    <view class="likeBox" style="display:{{displayLike}}">
+      <view class="likeBtn" catchtap="postLike" id="liketop">
+        <image src="{{likeIcon}}" />
+        <text>点个赞</text>
+      </view>
+      <view class="likeNum">
+        <text>{{detail.like_count || 0}} 人已赞</text>
+      </view>
+      <!-- 点赞头像 -->
+      <view class="likeGravatar">
+        <block wx:key="id" wx:for="{{detail.avatarurls}}">
+          <view class="like-user-gravatar">
+            <image src="{{item}}" class="gravatarLikeImg"></image>
+          </view>
+        </block>
+      </view>
+    </view>
+
+
+
+
+
+    <view class="comment-container">
+
+      <view>
+        <!-- 加载回复列表 -->
+        <template is="repliesList" data="{{repliesList:repliesList,memberUserInfo:memberUserInfo,detail:detail}}"></template>
+      </view>
+
+      <view style='display:{{isLoading?"block":"none"}}'>
+        <template is="threepoint" />
+      </view>
+      <view hidden="{{!isLastPage}}">
+        <view class="no-more" hidden="{{!isLastPage}}">- 到底啦-</view>
+      </view>
+    </view>
+
+    <view class="detail-copyright">
+      <template is="tempCopyright" data="{{copyright}}" />
+    </view>
+    <!--评论区-->
+    <view class="menuBackground" catchtap="hiddenBar" style="display:{{menuBackgroup ? 'block' : 'none'}}"></view>
+
+
+    <modal title="{{dialog.title}}" hidden="{{dialog.hidden}}" no-cancel bindconfirm="confirm">{{dialog.content}}</modal>
+
+    <template is="login-popup" data="{{show:isLoginPopup,userInfo:userInfo}}"></template>
+
+    <template is="modalView" data="{{...__modalView__}}" />
+    <poster id="poster" hide-loading="{{false}}" preload="{{false}}" config="{{posterConfig}}" bind:success="onPosterSuccess" bind:fail="onPosterFail">
+    </poster>
+    <l-dialog />
+
+    <view class="comment-fixed">
+      <view class="comment-respond">
+        <template is="toolbar" data="{{toolbarShow:toolbarShow,commentCounts:total_replies,likeIcon:likeIcon,enableComment:detail.enableComment}}"></template>
+
+        <template is="iconbar" data="{{iconBarShow:iconBarShow,enterpriseMinapp:detail.enterpriseMinapp,raw_praise_word:detail.raw_praise_word}}"></template>
+      </view>
+
+      <!-- 如果是iphoneX，底部Tab增加高度 -->
+      <view wx:if="{{isIpx}}" class="iphoneX"></view>
+    </view>
+
+    <!-- 评论内容输入框 -->
+    <view class="comment-textarea-box {{commentInputDialogShow ? '' : 'commentinputdialog-box-hidden'}}">
+      <form catchsubmit="replySubmit" report-submit="true">
+        <view>
+          <text class="comment-button touch-active" bindtap="hiddenBar">取消</text>
+          <button class="comment-button touch-active" formType="submit">发送</button>
+        </view>
+        <textarea maxlength="140" name="inputComment" cursor-spacing="80" value="{{content}}" placeholder="{{placeholder}}" focus="{{focus}}" bindblur="onBindBlur" bindfocus="onBindFocus" bindconfirm="replySubmit" auto-height="{{false}}" fixed="{{true}}" />
+        <input name="inputTopicID" value="{{detail.id}}" style="display:none" />
+      </form>
+    </view>
+
+  </view>
+</view>

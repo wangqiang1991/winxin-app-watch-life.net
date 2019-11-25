@@ -1,0 +1,43 @@
+<!--
+/*
+ * 
+ * 微慕小程序
+ * author: jianbo
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.
+ *
+ */-->
+<import src="../../templates/copyright.wxml" />
+<import src="../../templates/login-popup.wxml" />
+
+ <block wx:if="{{firstLoad && messages.length !== 0}}" wx:key="id" wx:for="{{messages}}">
+<view class='mymessage-container'>
+
+  <view class='message'>    
+    <view class='title-container'>
+    <text class='title'>留言内容</text>    
+      <text> <text>{{item.creatdate}}</text></text>
+    </view>
+    <text>{{item.content}}</text>
+    
+  </view>
+
+  <view class='reply' style="display:{{item.excerpt==null?'none':'block'}}">
+    <view class='title-container'>
+      <view class='title '>管理员回复: <text class='replytext'>{{item.excerpt}}</text></view>
+      <text>{{item.updatedate}}</text>
+    </view>
+   
+  </view>
+
+</view>
+</block>
+
+<view wx:if="{{firstLoad && messages.length === 0}}" class="goto-btn" bindtap="gotoUrl">
+  去合作
+</view>
+
+<view class="copyright">
+      <template is="tempCopyright" data="{{copyright}}"  />
+    </view>

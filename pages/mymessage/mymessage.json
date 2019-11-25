@@ -1,0 +1,9 @@
+{
+  "navigationBarBackgroundColor": "#0095FF",
+  "navigationBarTextStyle": "white",
+  "navigationBarTitleText": "我的合作",
+  "backgroundColor": "#ffffff",
+  "enablePullDownRefresh": true,
+  "backgroundColorTop": "#0095FF",
+  "backgroundColorBottom": "#fff"
+}

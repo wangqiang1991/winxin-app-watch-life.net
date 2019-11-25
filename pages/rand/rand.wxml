@@ -1,0 +1,41 @@
+<!--
+/*
+ * 
+ * 微慕小程序
+ * author: jianbo
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.
+ *
+ */-->
+
+<import src="../../templates/copyright.wxml" />
+<include src="../../templates/articleList/articleList.wxml" />
+
+<view class="container-rand">
+  <!-- <template is="{{listStyle === 'waterFlowArticle' ? 'rightThumbnailArticle' : listStyle}}" data="{{articlesList}}" />
+  <view class="copyright" style="display:{{floatDisplay}}">
+    <template is="tempCopyright" data="{{copyright}}" />
+  </view> -->
+
+  <swiper class="swiper-box" previous-margin="40rpx" next-margin="40rpx" circular="true">
+    <block wx:key="id" wx:for="{{articlesList}}" wx:index="{{index}}">
+      <swiper-item id="{{item.id}}" index="{{index}}" data-redicttype="{{item.type}}" data-appid="{{item.appid}}" data-url="{{item.url}}" bindtap="redictDetail">
+        <image mode="aspectFill" src="{{item.post_large_image}}" class="{{swiperIndex == index ? 'active' : ''}}" />
+        <view class="swiper-desc">
+          <view class="swiper-desc-data">
+            <text>浏览 {{item.pageviews}}</text>
+            <text>喜欢 {{item.like_count}}</text>
+            <text>评论 {{item.total_comments}}</text>
+            <text>{{item.raw_praise_word}} {{item.praise_count}}</text>
+          </view>
+          <text>{{item.title.rendered}}</text>
+        </view>
+      </swiper-item>
+    </block>
+  </swiper>
+</view>
+
+<!-- “换一波”刷新按钮 -->
+<!-- <image class="btn-change" src="../../images/refresh.png" bindtap="refresh"></image> -->
+<view class="btn-change" bindtap="refresh">换一波</view>

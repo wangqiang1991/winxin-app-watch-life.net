@@ -1,22 +1,39 @@
-<!--templates/login.wxml-->
+<!--
+/*
+ * 
+ * 微慕小程序
+ * author: jianbo
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.
+ *
+ */-->
 
 <template name="login">
-    <block wx:if="{{!userInfo.isLogin}}">
-        <button class="login-btn" open-type="getUserInfo" bindgetuserinfo="agreeGetUser">
-            <view class="login-inner">
-                <image class="avatar" src="../../images/gravatar.png"></image>
-                <view class="username">
-                    <text>请点击登录</text>
-                </view>
-            </view>
-        </button>
-    </block>
-    <block wx:else>
-        <view class="login-inner">
-            <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
-            <view class="username">
-                <text>{{userInfo.nickName}}</text>
-            </view>
+  <block wx:if="{{!userInfo.isLogin}}">
+
+    <view class="login-inner">
+      <button class="login-btn" open-type="getUserInfo" bindgetuserinfo="agreeGetUser">
+        <image class="avatar" src="../../images/gravatar.png"></image>
+        <view class="username">
+          <text>点击授权登录</text>
         </view>
-    </block>
+      </button>
+      <view class="tips">
+        <text>如果无法登录，请点击我的页面"清除缓存"后再次登录</text>
+      </view>
+      <view class="login-btn-box">
+        <button class="login-btn" bindtap="closeLoginPopup">取消</button>
+        <button class="login-btn" open-type="getUserInfo" bindgetuserinfo="agreeGetUser">确定</button>
+      </view>
+    </view>
+  </block>
+  <block wx:else>
+    <view class="login-inner">
+      <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
+      <view class="username">
+        <text>{{userInfo.nickName}}</text>
+      </view>
+    </view>
+  </block>
 </template>

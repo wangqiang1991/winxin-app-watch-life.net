@@ -1,0 +1,22 @@
+<!-- <view class="tree-select" style="height: {{ mainHeight }}px"> -->
+<view class="tree-select">
+  <view class="tree-select__nav">
+    <view wx:for="{{ items }}" wx:key="index" class="tree-select__nitem van-ellipsis {{ mainActiveIndex === index ? 'tree-select__nitem--active' : '' }}" data-index="{{ index }}" data-hasChildren="{{ item.hasChildren}}"  data-text="{{ item.text }}" data-id="{{ item.id}}" bind:tap="onClickNav">
+      <!-- <image src="{{item.catlogo}}" class="catLogoImg"></image> -->
+      {{ item.text }}
+    </view>
+  </view>
+  <!-- <view class="tree-select__content" style="height: {{ itemHeight }}px"> -->
+  <view class="tree-select__content">
+    <view wx:for="{{ subItems }}" wx:key="item.id" class="tree-select__item van-ellipsis {{ activeId === item.id ? 'tree-select__item--active' : '' }}" data-item="{{ item }}" data-text="{{ item.text }}" bind:tap="onSelectItem">
+      <image src="{{item.catlogo}}" class="{{showDescription?'catLogoImg':'catLogoImgNoDescription'}}" mode="aspectFill"></image>
+      <view class='word-container'>
+        <view class='word-title'>{{ item.text }}</view>
+        <view wx:if='{{showDescription}}'>
+        <view class='word-des'>{{ item.description }}</view>
+      </view>
+      </view>
+      <!-- <van-icon wx:if="{{ activeId === item.id }}" name="success" class="tree-select__selected"></van-icon> -->
+    </view>
+  </view>
+</view>

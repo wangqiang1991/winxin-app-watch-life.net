@@ -1,3 +1,13 @@
+<!--
+/*
+ * 
+ * 微慕小程序
+ * author: jianbo
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.
+ *
+ */-->
 <template name="tempCopyright">
-<view>  © 2019 守望轩 watch-life.net      </view>
+<view>  {{copyright}}   </view>
 </template>

@@ -1,110 +1,242 @@
-<!--
-/*
- * 
- * WordPres版微信小程序
- * author: jianbo
- * organization: 守望轩  www.watch-life.net
- * github:    https://github.com/iamxjb/winxin-app-watch-life.net
- * 技术支持微信号：iamxjb
- * 开源协议：MIT
- * Copyright (c) 2017 https://www.watch-life.net All rights reserved.
- *
- */-->
-
-<import src="../../templates/common-list.wxml" />
+<!-- * 微慕小程序
+* author: jianbo
+* organization:  微慕 www.minapper.com 
+* 技术支持微信号：Jianbo
+* Copyright (c) 2018 https://www.minapper.com All rights reserved. -->
+<include src="../../templates/articleList/articleList.wxml" />
+<import src="../../templates/loading/threepoint.wxml" />
 <import src="../../templates/copyright.wxml" />
+<import src="../../templates/login-popup.wxml" />
 
-<view class="index-header" style="display:{{displaySwiper}}">
-  <swiper class="index-swiper" indicator-dots="true" interval="10000" autoplay="true" indicator-color="rgba(255, 255, 255, .2)" indicator-active-color="rgba(255, 255, 255, .7)">
-    <block wx:key="id" wx:for="{{postsShowSwiperList}}">
-      <swiper-item id="{{item.id}}" index="{{index}}" data-redicttype="{{item.type}}" data-appid="{{item.appid}}" data-url="{{item.url}}" bindtap="redictAppDetail">
-        <image mode="aspectFill" src="{{item.post_medium_image}}" style="width:100%" />
-        <view class="swiper-mask"></view>
-        <view class="swiper-desc">
-          <text>{{item.post_title}}</text>
-        </view>
-      </swiper-item>
-    </block>
-  </swiper>
+<!-- 首次进入引导添加到“我的小程序” -->
+<view class="addMyMiniapp" wx:if="{{isFirst}}" catchtap="shutAddMyMiniapp">
+  <view>点击加入我的小程序 ↑</view>
+  <text>了解聚合猫最新内容</text>
 </view>
 
-<view class="showerror" style="display:{{showerror}}">
-  <image src="../../images/cry80.png" style="height:100rpx;width:100rpx"></image>
-  <view class="errortext">
-     暂时无法访问网络,下拉重试...
+<!-- 顶部Tab菜单 -->
+<view class='tab-box' wx:if="{{columns.length != 0}}">
+  <scroll-view class="tab-menu" scroll-into-view="tab-{{currentColumn-2>0?currentColumn-2:0}}" scroll-x="true">
+    <view bindtap="switchColumn" class="tab-menu-item {{currentColumn==idx?'active':''}}" data-idx="{{idx}}" id="tab-{{idx}}" wx:for="{{columns}}" data-categoryid="{{item.id}}" data-categoryids="{{item.ids}}" data-categoryNames="{{item.names}}" wx:for-index="idx"
+      wx:key="{{id}}" data-cover="{{item.category_thumbnail_image}}">
+      {{item.name}}
+    </view>
+  </scroll-view>
+  <!-- 搜索和下拉设置图标 -->
+  <image bindtap="openSearch" class="tab-search-btn" src="../../images/tab-search-btn.png"></image>
+  <image bindtap="openCustomPannel" catchtouchmove="consumeTouchmove" class="tab-custom-btn {{isColumnPannelOpen?'tab-custom-btn-open':''}}" src="../../images/tab-custom-btn.png"></image>
+</view>
+<!-- 点击下拉图标展示出的设置项 -->
+<view class="columnPannelHeader" wx:if="{{isColumnPannelOpen}}">
+  <text class="columnPannelTitle">所有栏目 </text>
+</view>
+<view catchtouchmove="consumeTouchmove" class="columnPannel full-height" style="height:{{windowHeight}}px;" wx:if="{{isColumnPannelOpen}}">
+  <view class="selected-pannel">
+    <view bindtap="selectColumn" bindtouchend="columnItemTouchEnd" bindtouchstart="columnItemTouchStart" catchtouchmove="columnItemMoving" class="column-item-selected {{columnSelectedIndex==moveToIndex?'column-item-moving':''}}" data-index="{{columnSelectedIndex}}"
+      disableScroll="true" style="height: {{columnItemHeight}}rpx;line-height: {{columnItemHeight}}rpx;" wx:for="{{columns}}" wx:for-index="columnSelectedIndex" wx:key="{{id}}" data-categoryid="{{item.id}}" data-categoryids="{{item.ids}}" data-categorynames="{{item.names}}"
+      data-cover="{{item.category_thumbnail_image}}">
+      <text class="column-item-selected-text {{columnSelectedIndex==0?'column-item-selected-first':''}}">{{item.name}}</text>
+    </view>
+  </view>
+  <view class="me-item-gap"></view>
+  <!-- 列表展示方式 -->
+  <text class="columnPannelTitle">列表展示方式
+  </text>
+  <view class="unselected-pannel">
+    <view class='settings-container'>
+      <view class="section-choice">
+        <radio-group name="radioGroup" bindchange="changeListStyle">
+          <label>
+            <radio value="upBigImageArticle" checked="{{listStyle=='upBigImageArticle'?true:false}}" />大图列表</label>
+          <label>
+            <radio value="noImageArticle" checked="{{listStyle=='noImageArticle'?true:false}}" />无图列表</label>
+          <label>
+            <radio value="leftThumbnailArticle" checked="{{listStyle=='leftThumbnailArticle'?true:false}}" />左图右文</label>
+          <label>
+            <radio value="rightThumbnailArticle" checked="{{listStyle=='rightThumbnailArticle'?true:false}}" />右图左文</label>
+          <label>
+            <radio value="multipleImageArticle" checked="{{listStyle=='multipleImageArticle'?true:false}}" />多图列表</label>
+          <label>
+            <radio value="waterFlowArticle" checked="{{listStyle=='waterFlowArticle'?true:false}}" />瀑布流列表</label>
+        </radio-group>
+      </view>
+
+    </view>
   </view>
 </view>
 
-<view style="display:{{showallDisplay}}">
-
-  <view style="display:{{floatDisplay}}">
-    <form catchsubmit="formSubmit" catchreset="formReset" id="search-form">
-      <view class="search-pancel">
-        <input value="" id="search-input" name="input" confirm-type="search" class="search-input" placeholder="搜索你感兴趣的内容..." bindconfirm="formSubmit"></input>
-        <button class="search-button" form-type="submit" size="mini" plain="true">
-          <icon type="search" color="#959595" size="12" />
-        </button>
-      </view>
-    </form>
-    <!-- 图标导航 -->
-    <view class="top-Nav">
-      <block wx:for="{{topNav}}" wx:key="id">
-        <view class="top-item" catchtap="onNavRedirect" id="{{item.id}}" data-redicttype="{{item.redirecttype}}" data-url="{{item.url}}" data-appid="{{item.appid}}" data-extraData="{{item.extraData}}">
-          <view>
-            <image src="{{item.image}}"></image>
+<view wx:if="{{!isColumnPannelOpen}}" class='index-container'>
+  <view style="display:{{isWiper?'block':'none'}}">
+    <!-- 轮播图 -->
+    <swiper class="swiper-box" interval="10000" autoplay="true" previous-margin="32rpx" next-margin="32rpx" circular="true">
+      <block wx:key="id" wx:for="{{swiperArticles}}" wx:index="{{index}}">
+        <swiper-item class="swiper-item" id="{{item.id}}" index="{{index}}" data-redicttype="{{item.type}}" data-appid="{{item.appid}}" data-url="{{item.url}}" bindtap="redictDetail">
+          <image mode="aspectFill" src="{{item.post_large_image}}" class="swiper-image {{swiperIndex == index ? 'active' : ''}}" />
+          <view class="swiper-desc">
+            <text>{{item.post_title}}</text>
           </view>
-          <view>
-            <text>{{item.name}}</text>
-          </view>
-        </view>
+        </swiper-item>
       </block>
-      <!-- <view class="top-item" style='width:10%; position: relative; float:left; text-align:center'>
-                    <view>
-                        <image src="../../images/kefu.png"></image>
-                    </view>
-                    <view>
-                        <text>客服</text>
-                    </view>
-                    <button class="share-button" open-type="contact">
-                    </button>
-                </view> -->
-    </view>
-    <!-- 图标导航 -->
+    </swiper>
 
-    <view class='top-Nav2'>
-      <navigator url='../hot/hot' hover-class='none'>
-        <view class="top-Nav2-item">
-          <view class="top-Nav2-item-word">
-            <text>排行榜单</text>
+
+
+
+    <view class="l-noticebar" style="color: #3683D6; background-color: #DFEDFF">
+      <swiper vertical="true" autoplay='true' interval="5000" class="l-noticebar-content-wrap">
+        <block wx:for="{{billboardList}}" wx:key="id">
+          <swiper-item class="l-noticebar-swiper" bindtap="redictDetail" data-postType="{{item.postType}}" id="{{item.id}}" index="{{index}}">
+            <image src="{{item.post_frist_image}}" class="l-icon-image"></image>
+            <text class="l-icon-text"> {{item.title.rendered}}</text>
+          </swiper-item>
+        </block>
+      </swiper>
+      
+    </view>
+
+
+
+    <!-- 精选栏目 -->
+    <view class="selected-nav" wx:if="{{topNav.length != 0}}">
+      <view class='common-subtitle'>
+        <view class='common-subtitle-left'>精选栏目</view>
+        <view class='common-subtitle-right'>滑动查看</view>       
+      </view>
+      <!-- 栏目列表 -->
+      <scroll-view scroll-x>
+        <view class="selected-nav-list">
+          <block wx:for="{{topNav}}" wx:key="{{id}}">
+            <view wx:if="{{ item.redirecttype == 'webpage' || item.redirecttype == 'apppage'}}">
+              <view class="selected-nav-item" catchtap="onNavRedirect" id="{{item.id}}" data-redicttype="{{item.redirecttype}}" data-url="{{item.url}}" data-appid="{{item.appid}}" data-extraData="{{item.extraData}}">
+                <view>
+                  <image mode="aspectFill" src="{{item.image}}"></image>
+                </view>
+                <view>
+                  <text>{{item.name}}</text>
+                </view>
+              </view>
+            </view>
+
+            <view wx:if="{{ item.redirecttype == 'miniapp'}}">
+              <view class="selected-nav-item">
+                <navigator path="{{item.url}}" hover-class="none" open-type="navigate" app-id="{{item.appid}}" target="miniProgram">
+                  <view>
+                    <image mode="aspectFill" src="{{item.image}}"></image>
+                  </view>
+                  <text>{{item.name}}</text>
+                </navigator>
+              </view>
+            </view>
+          </block>
+        </view>
+      </scroll-view>
+    </view>
+
+    <block wx:if="{{homepageMediaDisplay}}">
+      <view class="media-nav" wx:if="{{forums.length !== 0}}">
+        <view class='common-subtitle'>
+          <view class='common-subtitle-left'>媒体中心</view>
+
+        </view>
+        <view class="media-body">
+          <view class="left-video" bindtap="govideo">
+            <image mode="aspectFill" src="../../images/uploads/video-bg.jpg"></image>
+            <view>视频
+              <text>VIDEO</text>
+            </view>
+          </view>
+          <view class="right">
+            <view class="right-top-pic" bindtap="goimage">
+              <image mode="aspectFill" src="../../images/uploads/pic-bg.jpg"></image>
+              <view>图片
+                <text>PHOTO</text>
+              </view>
+            </view>
+            <view class="right-bottom">
+              <view class="right-bottom-audio" bindtap="goaudio">
+                <image mode="aspectFill" src="../../images/uploads/audio-bg.jpg"></image>
+                <view>音频
+                  <text>AUDIO</text>
+                </view>
+              </view>
+              <view class="right-bottom-file" bindtap="gofile">
+                <image mode="aspectFill" src="../../images/uploads/file-bg.jpg"></image>
+                <view>文件
+                  <text>FILE</text>
+                </view>
+              </view>
+            </view>
           </view>
         </view>
-      </navigator>
+      </view>
+    </block>
 
 
-      <navigator url="../../pages/list/list?categoryID=1059" hover-class='none'>
-        <view class="top-Nav2-item2">
-          <view class="top-Nav2-item-word">
-            <text>微信小程序</text>
+    <!-- 热门标签 -->
+    <!-- <view style="display:{{isTags?'block':'none'}}" class="tags" wx:if="{{tagsList.length != 0}}">
+      <view class='common-subtitle'>
+        <view class='common-subtitle-left'>热门标签</view>
+        <navigator url="../postags/postags" open-type="navigate" hover-class="relatedNavigator">
+          <view class='common-subtitle-right'>更多</view>
+        </navigator>
+      </view> -->
+      <!-- 标签列表 -->
+      <!-- <view class='tagsname-container'>
+        <block wx:key="id" wx:for="{{tagsList}}">
+          <view class="tagsname">
+            <navigator url="../list/list?tag={{item.id}}&tagname={{item.name}}" open-type="navigate" hover-class="relatedNavigator">
+              <view class='tagsname-name'>#{{item.name}}</view>
+            </navigator>
           </view>
-        </view>
-      </navigator>
-    </view>
+        </block>
+      </view>
+    </view> -->
 
 
 
   </view>
-  <view class="container">
-    <!-- 加载图文列表 -->
-    <view class="index-container">
-      <template is="tempCommonList" data="{{postsList}}" />
 
-      <view class="loadingmore" style="display:{{floatDisplay}}">
-      
-        <view class="no-more" hidden="{{!isLastPage}}">---无更多文章---</view>
+  <!-- 发布文章按钮 -->
+  <view class="fix-add-box">
+    <view class="posts {{showAddBtnType ? 'rotImg' : ''}}" bindtap="addArticle">
+      <image class="addarticle" src="../../images/uploads/add_btn.png"></image>
+    </view>
+    <view class="show-add-article show-add-btn {{showAddBtnType ? 'show-article-btn' : ''}}" bindtap="gotoAddArticle">
+      <image src="../../images/uploads/add-article.png"></image>
+      <text>发文章</text>
+    </view>
+    <view class="show-add-goods show-add-btn {{showAddBtnType ? 'show-goods-btn' : ''}}" bindtap="gotoAddGoods">
+      <image src="../../images/uploads/add-goods.png"></image>
+      <text>发商品</text>
+    </view>
+  </view>
+
+  <!-- 无法访问网络 -->
+  <view class="showerror" style="display:{{isError?'block':'none'}}">
+    <image src="../../images/cry80.png" style="height:100rpx;width:100rpx;margin-top:200rpx;"></image>
+    <view class="errortext">
+      无法访问网络，请下拉刷新...
+    </view>
+  </view>
+
+  <l-dialog />
+
+  <!-- 上拉加载动画、到底了和版权信息 -->
+  <view style="display:{{isArticlesList?'block':'none'}}">
+    <view class="list-container">
+      <!-- 瀑布流组件 -->
+      <water-flow wx:if="{{listStyle === 'waterFlowArticle'}}" generic:l-water-flow-item="z-water-flow" />
+      <!-- 其他文章列表样式模板 -->
+      <template wx:if="{{listStyle !== 'waterFlowArticle'}}" is="{{listStyle}}" data="{{articlesList:articlesList,listAdsuccess:listAdsuccess,memberUserInfo:memberUserInfo}}" />
+      <view style='display:{{isLoading?"block":"none"}}'>
+        <template is="threepoint" />
       </view>
-      <view class="copyright" style="display:{{floatDisplay}}">
-        <template is="tempCopyright" />
+      <view class="no-more" style="display:{{isLastPage?'block':'none'}}">- 到底啦 -</view>
+      <view class="copyright">
+        <template is="tempCopyright" data="{{copyright}}" />
       </view>
     </view>
   </view>
 </view>
+
+<template is="login-popup" data="{{show:isLoginPopup,userInfo:userInfo}}"></template>

@@ -8,7 +8,9 @@
 		"minified": true,
 		"newFeature": true,
 		"coverView": true,
+		"nodeModules": false,
 		"autoAudits": false,
+		"uglifyFileName": true,
 		"checkInvalidKey": true,
 		"checkSiteMap": true,
 		"uploadWithSourceMap": true,
@@ -17,12 +19,12 @@
 			"disablePlugins": [],
 			"outputPath": ""
 		},
-		"uglifyFileName": true
+		"bundle": true
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.6.6",
-	"appid": "wx39075d0bde24f9f7",
-	"projectname": "%22%E5%AE%88%E6%9C%9B%E8%BD%A9%22%E7%BD%91%E7%AB%99%E5%B0%8F%E7%A8%8B%E5%BA%8F",
+	"libVersion": "2.9.0",
+	"appid": "wx282ef3af18639597",
+	"projectname": "%E8%81%9A%E5%90%88%E7%8C%ABPlus",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
 	"condition": {
@@ -55,13 +57,186 @@
 		"game": {
 			"list": []
 		},
+		"gamePlugin": {
+			"current": -1,
+			"list": []
+		},
 		"miniprogram": {
-			"current": 0,
+			"current": 1,
 			"list": [
 				{
+					"id": 0,
+					"name": "企业信息",
+					"pathName": "pages/about/about",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": 1,
+					"name": "页面",
+					"pathName": "pages/pagelist/pagelist",
+					"query": "",
+					"scene": null
+				},
+				{
 					"id": -1,
-					"name": "评论",
-					"pathName": "pages/comments/comments",
+					"name": "动态发布页",
+					"pathName": "pages/postopic/postopic",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "分类",
+					"pathName": "pages/topic/topic",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "付费阅读",
+					"pathName": "pages/payment/payment",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "我的赞赏码",
+					"pathName": "pages/authorcode/authorcode",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "随机文章",
+					"pathName": "pages/rand/rand",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "积分排行",
+					"pathName": "pages/ranking/ranking",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "我的",
+					"pathName": "pages/myself/myself",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "赚积分",
+					"pathName": "pages/earnIntegral/earnIntegral",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "用户列表",
+					"pathName": "pages/userlist/userlist",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "视频列表",
+					"pathName": "pages/videolist/videolist",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "视频列表",
+					"pathName": "pages/videolist/videolist",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "文章详情",
+					"pathName": "pages/detail/detail",
+					"query": "id=6263",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "文章详情",
+					"pathName": "pages/detail/detail",
+					"query": "id=169",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "文章详情页",
+					"pathName": "pages/detail/detail",
+					"query": "id=170",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "文章详情页",
+					"pathName": "pages/detail/detail",
+					"query": "id=180",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "作者主页",
+					"pathName": "pages/author/author",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "作者主页",
+					"pathName": "pages/author/author",
+					"query": "userid=1&postype=post",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "动态详情页",
+					"pathName": "pages/topicarticle/topicarticle",
+					"query": "id=2682",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "图片列表",
+					"pathName": "pages/photolist/photolist",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "音频合集",
+					"pathName": "pages/audiolist/audiolist",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "文件合集",
+					"pathName": "pages/filelist/filelist",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": 23,
+					"name": "发表文章",
+					"pathName": "pages/addarticle/addarticle",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "发布商品",
+					"pathName": "pages/addgoods/addgoods",
+					"query": "",
 					"scene": null
 				}
 			]

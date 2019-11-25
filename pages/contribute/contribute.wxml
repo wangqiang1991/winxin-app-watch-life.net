@@ -1,0 +1,45 @@
+<!--
+/*
+ * 
+ * 微慕小程序
+ * author: jianbo
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.
+ *
+ */-->
+<view class="contribute-container">
+
+  <view class="article-container">
+    <view class='article'>
+      <view class="title">
+        <textarea placeholder="请输入标题" placeholder-style="color:#959595;" />
+      </view>
+
+      <view class="main-body">
+        <textarea placeholder="请输入文章正文" placeholder-style="color:#959595;" />
+      </view>
+    </view>
+
+    <view class='upload-pic'>
+      <image src="../../images/upload-pic.png"></image>
+      <text>插入图片</text>
+    </view>
+  </view>
+
+  <view class="article-container2">
+    <view class="me-item-detail">
+      <text>选择分类</text>
+      <image src="../../images/nextPage.png"></image>
+    </view>
+    <view class="me-item-gap"></view>
+    <view class="author">
+      <textarea placeholder="请输入作者" placeholder-style="color:#959595;" maxlength="40" />
+    </view>
+  </view>
+
+   <view class="btn-area">
+    <button class="btn-submit" formType="submit">立即投稿</button>
+  </view> 
+
+</view>

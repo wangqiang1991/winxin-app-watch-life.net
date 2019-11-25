@@ -1,0 +1,14 @@
+{
+  "usingComponents": {
+    "forum-form": "../../templates/addarticle/form/forum-form",
+    "forum-bar": "../../templates/addarticle/bar/forum-bar",
+    "forum-image": "../../templates/addarticle/image/image",
+    "forum-text": "../../templates/addarticle/text/text",
+    "forum-tags": "../../templates/addarticle/tags/tags",
+    "van-tree-select": "../../vendor/vant-weapp/tree-select/index",
+    "van-popup": "../../vendor/vant-weapp/popup/index",
+    "l-dialog": "../../vendor/LinUI/dialog/index",
+    "l-toast": "../../vendor/LinUI/toast/index"
+  },
+  "navigationBarTitleText": "发表文章"
+}

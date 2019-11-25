@@ -1,0 +1,21 @@
+<!--
+/*
+ * 
+ * 微慕小程序
+ * author: jianbo
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.
+ *
+ */-->
+<import src="../../templates/articleList/leftThumbnailArticlePending.wxml" />
+<import src="../../templates/loading/threepoint.wxml" />
+<import src="../../templates/copyright.wxml" />
+
+<view class="container">
+  <template is="leftThumbnailArticlePending" data="{{articlesList:articlesList,posttype:detailposttype}}" />
+  <view class="copyright">
+    <template is="tempCopyright" data="{{copyright}}" />
+  </view>
+  <l-dialog />
+</view>

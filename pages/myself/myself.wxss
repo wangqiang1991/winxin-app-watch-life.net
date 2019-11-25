@@ -1,0 +1,327 @@
+/*
+ * 
+ * 微慕小程序
+ * author: jianbo
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.
+ */
+
+page {
+  background: #f5f7f7;
+}
+
+.userinfo {
+  background-color: #2f80ed;
+  height: 360rpx;
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-bottom-left-radius: 60rpx;
+  border-bottom-right-radius: 60rpx;
+}
+
+.userinfo-profile {
+  display: flex;
+  align-items: center;
+  margin-left: 40rpx;
+  margin-top: -100rpx;
+  overflow: hidden;
+}
+
+.userinfo-avatar {
+  width: 180rpx;
+  height: 180rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.userinfo-avatar image {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  border-width: 8rpx;
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.userinfo-nickname-container {
+  margin-left: 24rpx;
+}
+
+.userinfo-nickname {
+  color: #fff;
+  font-weight: 600;
+  font-size: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+  width: 320rpx;
+}
+
+.userinfo-rights {
+  display: flex;
+  flex-direction: row;
+  font-size: 13px;
+  color: #fff;
+  margin-top: 8rpx;
+}
+
+.userinfo-member {
+  margin-right: 40rpx;
+}
+
+/* 帖子、文章、粉丝、关注 */
+
+.user-data {
+  height: 200rpx;
+  padding: 0 40rpx;
+  background: #fff;
+}
+
+.user-data-box {
+  height: 180rpx;
+  border-radius: 12rpx;
+  box-shadow: 0 16rpx 30rpx -16rpx rgba(80, 80, 80, 0.2);
+  background: #fff;
+  display: flex;
+  justify-content: space-around;
+  margin-top: -80rpx;
+  position: relative;
+}
+
+.user-data-box>view {
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.user-data-box>view:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  width: 1rpx;
+  height: 48rpx;
+  background: #dadada;
+}
+
+.user-data-box>view>text:first-child {
+  display: block;
+  font-size: 18px;
+  color: #333;
+  font-weight: 600;
+}
+
+.user-data-title {
+  font-size: 14px;
+  color: #333;
+  font-weight: 400;
+}
+
+/* 赚取积分 */
+
+.btn-signin {
+  height: 60rpx;
+  padding: 0 40rpx 0 60rpx;
+  font-size: 24rpx;
+  color: #fff;
+  line-height: 60rpx;
+  border-top-left-radius: 30rpx;
+  border-bottom-left-radius: 30rpx;
+  background-color: rgba(255, 255, 2555, 0.1);
+  position: absolute;
+  right: 0;
+  top: 64rpx;
+}
+
+.icon-signin {
+  width: 26rpx;
+  height: 26rpx;
+  position: absolute;
+  top: 17rpx;
+  left: 24rpx;
+}
+
+/* 九宫格列表 */
+
+.ninebox {
+  display: flex;
+  flex-wrap: wrap;
+  background: #fff;
+}
+
+.ninebox-item {
+  width: 25%;
+  height: 150rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  color: #333;
+}
+
+.ninebox-item image {
+  width: 36rpx;
+  height: 36rpx;
+  margin-bottom: 24rpx;
+}
+
+.ninebox-item > button {
+  line-height: 54rpx;
+  border-radius: 30rpx;
+  font-size: 14px;
+  color: #333;
+  background: #fff;
+  padding: 0!important;
+}
+
+.ninebox-item > button::after {
+  border: none;
+}
+
+/* 列表样式 */
+
+.listBox {
+  margin-bottom: 40rpx;
+}
+
+.listSubBox {
+  padding: 0 40rpx;
+  margin-top: 80rpx;
+  background: #fff;
+  position: relative;
+}
+
+.admin::before {
+  content: "管理员权限";
+  position: absolute;
+  top: -50rpx;
+  color: #959595;
+  font-size: 13px;
+}
+
+.sets::before {
+  content: "设置";
+  position: absolute;
+  top: -50rpx;
+  color: #959595;
+  font-size: 13px;
+}
+
+.listItem {
+  height: 100rpx;
+  line-height: 100rpx;
+  font-size: 14px;
+  color: #333;
+  position: relative;
+}
+
+.listItem::after {
+  content: "";
+  display: inline-block;
+  border: solid #c4c4c4;
+  border-width: 0 2px 2px 0;
+  padding: 3px;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%) rotate(-45deg);
+  -webkit-transform: translateY(-50%) rotate(-45deg);
+}
+
+.listBox view:not(:last-child) {
+  border-bottom: 1rpx solid #eee;
+}
+
+.listItem button {
+  height: 100rpx;
+  line-height: 100rpx;
+  font-size: 14px;
+  text-align: left;
+  color: #333;
+  padding: 0;
+  background: #fff;
+}
+
+.listItem button::after {
+  border: none;
+}
+
+/* 订阅消息列表 */
+
+.listItem-subscribe {
+  height: 120rpx;
+  line-height: 120rpx;
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  display: flex;
+  justify-content: space-between;
+}
+
+.subscribe::before {
+  content: "订阅消息";
+  position: absolute;
+  top: -50rpx;
+  color: #959595;
+  font-size: 13px;
+}
+
+.subscribe::after {
+  content: "* 订阅1次可收到1条消息推送";
+  position: absolute;
+  top: -50rpx;
+  right: 40rpx;
+  color: #959595;
+  font-size: 13px;
+}
+
+.listItem-subscribe.news {
+  line-height: 1;
+}
+
+.subscribe-news-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.subscribe-news-box>view {
+  font-size: 13px;
+  font-weight: 400;
+  color: #959595;
+  margin-top: 8rpx;
+}
+
+.subscribe-tip {
+  display: flex;
+  align-items: center;
+  font-weight: 400;
+  font-size: 13px;
+  color: #959595;
+}
+
+.subscribe-tip>view {
+  height: 48rpx;
+  padding: 0 30rpx;
+  margin-left: 20rpx;
+  font-size: 13px;
+  font-weight: 500;
+  color: #959595;
+  text-align: center;
+  line-height: 48rpx;
+  border: 4rpx solid #ddd;
+  border-radius: 30rpx;
+}

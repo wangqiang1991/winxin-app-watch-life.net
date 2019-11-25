@@ -1,0 +1,36 @@
+<!--
+/*
+ * 
+ * 微慕小程序
+ * author: jianbo
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.
+ *
+ */-->
+<!-- <text>pages/forum/publish/inc/component/tags/tags.wxml</text> -->
+<view class='tags-page main'>
+<form bindsubmit="_bindFormSubmit" >
+  <view class='tags-page-search'>
+    <input placeholder='请输入关键字' placeholder-style='color:#cccccc;'  name="input" value='{{tvalue}}' ></input>
+    <image mode='widthFix' bindtap="_onBackBtn" src='../../../images/deletetag.png'></image>
+  </view>
+
+  <view class='tags-page-explain'>多个关键词请以
+    <text>空格</text> 或者英文逗号“,”隔开</view>
+
+  <view class='footer'>
+    <button class='btn-color' form-type="submit">确 认</button>
+  </view>
+</form>
+  <view class='hot'>
+    <view class='hot-header'>热门标签</view>
+    <view class='hot-section' wx:for="{{tagsList}}" wx:key="{{item}}">
+      <view class='hot-section-title'>{{item.type_name}}</view>
+      <view class='hot-section-btn'  wx:for="{{item.list}}" bindtap='_tagsTap' data-id="{{item.tag_id}}" data-name='{{item.tag_name}}'>{{item.tag_name}}</view>
+    </view>
+
+   
+  </view>
+
+</view>

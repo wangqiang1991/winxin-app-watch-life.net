@@ -1,0 +1,64 @@
+<!--
+/*
+ * 
+ * 微慕小程序
+ * author: jianbo
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.
+ *
+ */-->
+
+<import src="../../templates/copyright.wxml" />
+<import src="../../vendor/wxParse/wxParse.wxml" />
+<import src="../../templates/socials/socials.wxml" />
+<import src="../../templates/searchFrom.wxml" />
+<import src="../../templates/login-popup.wxml" />
+
+<!-- 动态-分类列表 -->
+<view class="topic-common-list" style="display:{{isCategory?'block':'none'}}">
+  <view class="topic-list-item">
+    <image mode="aspectFill" src="{{categoryImage}}" class="cover">
+    </image>
+    <view class='topic-item-content'>
+      <view class="topic-content-brief">
+        <text>{{category.name}}</text>
+      </view>
+      <view class="topic-content-num">
+        <text>共有 {{category.count}} 条动态</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 动态-标签列表 -->
+<view class="topic-common-list" style="display:{{isTag?'block':'none'}}">
+  <view class="topic-list-item">
+    <image mode="aspectFill" src="../../images/uploads/default_image.jpg" class="cover">
+    </image>
+    <view class='topic-item-content'>
+      <view class="topic-content-brief">
+        <text>{{tagname}}</text>
+      </view>
+      <view class="topic-content-num">
+        <text>共有 {{topicsList.length}} 条动态</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+<view style="display:{{isSearch?'block':'none'}}">
+  <template is="tempSearchFrom" data="{{searchKey}}" />
+</view>
+<template is="socials" data="{{topicsList:topicsList,isPlaying:isPlaying,dataId:dataId,userSession:userSession,memberUserInfo:memberUserInfo,topiclistAdId:topiclistAdId,topiclistAd:topiclistAd,topiclistAdEvery:topiclistAdEvery,topicListAdsuccess:topicListAdsuccess,listType:'topicList'}}"
+/>
+<template is="login-popup" data="{{show:isLoginPopup,userInfo:userInfo}}"></template>
+
+<!-- 发布按钮 -->
+<view style="display:{{showAddbtn?'block':'none'}}">
+  <view class="posts" bindtap="sendPost">
+    <image class="addpost" src="../../images/column-upload-pic.png"></image>
+  </view>
+</view>
+
+<l-dialog />

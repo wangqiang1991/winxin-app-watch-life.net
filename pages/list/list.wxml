@@ -1,80 +1,68 @@
 <!--
 /*
  * 
- * WordPres版微信小程序
+ * 微慕小程序
  * author: jianbo
- * organization: 守望轩  www.watch-life.net
- * github:    https://github.com/iamxjb/winxin-app-watch-life.net
- * 技术支持微信号：iamxjb
- * 开源协议：MIT
- * Copyright (c) 2017 https://www.watch-life.net All rights reserved.
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.
  *
  */-->
-<import src="../../templates/common-list.wxml" />
+<include src="../../templates/articleList/articleList.wxml" />
 <import src="../../templates/copyright.wxml" />
+<import src="../../templates/searchFrom.wxml" />
 
-  <scroll-view style="height:100%;" scroll-y="true" lower-threshold="100rpx">
-
-    <view class="topic-common-list" style="display:{{isCategoryPage}}">
-      <view class="topic-list-item">
-        <image src="{{categoriesImage}}" class="cover">
-        </image>
-        <view class="topic-content-title">
-          <text>{{categoriesList.name}}</text>
-        </view>
-        <view class="topic-content-title-line"></view>
-        <view class="topic-content-brief">
-          <text>{{categoriesList.description}}</text>
-        </view>
+<!-- 分类列表 -->
+<view class="topic-common-list" wx:if="{{isCategory && isGoodsType}}">
+  <view class="topic-list-item">
+    <image mode="aspectFill" src="{{categoryImage}}" class="cover"></image>
+    <view class='topic-item-content'>
+      <view class="topic-content-brief">
+        <text>{{category.description}}</text>
       </view>
-    </view>
-
-
-    <view class="topic-common-list" style="display:{{isSearchPage}}">
-      <view class="topic-list-item">
-        <view>
-          <image src="../../images/website-search.png" class="cover"></image>
-        </view>
-        <view class="topic-content-title">
-          <text>搜索关键字：</text>
-          <text class="searchKey">{{searchKey}}</text>
-        </view>
-        <view class="topic-content-title-line"></view>
-        <view class="topic-content-brief">
-          <text>本搜索是全文搜索</text>
-        </view>
+      <view class="topic-content-num">
+        <text>共收录 {{category.count}} 篇文章</text>
       </view>
+      <!-- <view class="topic-content-btn">
+        <button plain='true'>订阅</button>
+      </view> -->
     </view>
-
-
-
-<view class="container">
-
-    <view class="showerror" style="display:{{showerror}}">
-      <image src="../../images/cry80.png" style="height:100rpx;width:100rpx"></image>
-
-      <view class="errortext">
-        暂时无法访问网络
-        <view class="">
-          <button class="more-button" bindtap="reload" size="mini" bindtap="reload">重新加载</button>
-        </view>
-      </view>
-    </view>
-
-    <view style="display:{{showallDisplay}}">
-      <template is="tempCommonList" data="{{postsList}}" />
-
-      <view class="loadingmore" style="display:{{floatDisplay}}">
-  
-
-        <view class="no-more" hidden="{{!isLastPage}}">----------无更多文章...---------</view>
-
-      </view>
-
-    </view>
-
-    <view class="copyright" style="display:{{floatDisplay}}">
-      <template is="tempCopyright" />
-    </view>
+  </view>
 </view>
-  </scroll-view>
+
+<!-- 标签列表 -->
+<view class="topic-common-list" wx:if="{{isTag && isGoodsType}}">
+  <view class="topic-list-item">
+    <image mode="aspectFill" src="{{categoryImage}}" class="cover"></image>
+    <view class='topic-item-content'>
+      <view class="topic-content-brief">
+        <text>{{tagname}}</text>
+      </view>
+      <view class="topic-content-num">
+        <text>共收录 {{articlesList.length}} 篇文章</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 文章列表 -->
+<view wx:if="{{isArticlesList}}">
+  <view style="display:{{isSearch?'block':'none'}}">
+    <template is="tempSearchFrom" />
+  </view>
+  <view class="container">
+    <template is="{{listStyle === 'waterFlowArticle' ? 'rightThumbnailArticle' : listStyle}}" data="{{articlesList}}" />
+    <view class="no-more" style="display:{{isLastPage?'block':'none'}}">- 到底啦 -</view>
+    <view class="copyright">
+      <template is="tempCopyright" data="{{copyright}}" />
+    </view>
+  </view>
+</view>
+
+<!-- 无网络时 -->
+<view class="showerror" style="display:{{isError?'block':'none'}}">
+  <image src="../../images/cry80.png" style="height:100rpx;width:100rpx"></image>
+  <view class="errortext">
+    暂时无法访问网络,下拉重试...
+  </view>
+</view>

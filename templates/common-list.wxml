@@ -16,7 +16,7 @@
             <image src="../../images/home-like.png"></image>
             <text class="">{{item.like_count}}</text>        
         </view>
-        <image src="{{item.post_medium_image}}" mode="aspectFill" class="cover"></image>
+        <image lazy-load="true"  src="{{item.post_medium_image}}" mode="aspectFill" class="cover"></image>
       </view>
     </block>
   </view>  

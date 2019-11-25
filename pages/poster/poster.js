@@ -1,20 +1,16 @@
 /*
  * 
- * WordPres版微信小程序
+ * 微慕小程序
  * author: jianbo
- * organization: 守望轩  www.watch-life.net
- * github:    https://github.com/iamxjb/winxin-app-watch-life.net
- * 技术支持微信号：iamxjb
- * 开源协议：MIT
- * Copyright (c) 2017 https://www.watch-life.net All rights reserved.
- * 
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.
  */
 
 var Api = require('../../utils/api.js');
 var util = require('../../utils/util.js');
-var WxParse = require('../../wxParse/wxParse.js');
-var wxApi = require('../../utils/wxApi.js')
-var wxRequest = require('../../utils/wxRequest.js')
+var WxParse = require('../../vendor/wxParse/wxParse.js');
+
 var auth = require('../../utils/auth.js');
 import config from '../../utils/config.js'
 var app = getApp();
@@ -58,7 +54,7 @@ Page({
                         console.log(result)
                         wx.showModal({
                             title: '提示',
-                            content: '二维码海报已存入手机相册，赶快分享吧',
+                            content: '二维码海报已存入手机相册，赶快分享到朋友圈吧',
                             showCancel: false,
                             success: function (res) {
                                 if (res.confirm) {
@@ -82,4 +78,5 @@ Page({
             urls: [src],
         });
     }
+    
 })

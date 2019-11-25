@@ -1,0 +1,31 @@
+<!--
+ * 微慕小程序
+ * author: jianbo
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.-->
+
+<import src="../../templates/copyright.wxml" />
+<import src="../../templates/login-popup.wxml" />
+
+<view class="list-box">
+  <block wx:key="id" wx:for="{{orders}}">
+    <view class="item-box" data-ordertype="{{item.ordertype}}" data-extid="{{item.extid}}" bindtap="redictDetail">
+      <view class="item-left">
+        <view>{{item.extname}}</view>
+        <view>{{item.ordertypename}}</view>
+        <view>{{item.paydate}}</view>
+      </view>
+      <view class="item-right">
+        <text>-{{item.totalfee}}</text>
+        <text wx:if="{{item.ordertype == 'catsubscribeIntegral' || item.ordertype == 'postIntegral'}}">积分</text>
+        <text wx:else>元</text>
+      </view>
+    </view>
+  </block>
+</view>
+
+<!-- 版权信息 -->
+<view class="copyright">
+  <template is="tempCopyright" data="{{copyright}}" />
+</view>

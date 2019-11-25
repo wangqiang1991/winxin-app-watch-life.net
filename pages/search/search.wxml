@@ -1,0 +1,29 @@
+<!--
+/*
+ * 
+ * 微慕小程序
+ * author: jianbo
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.
+ *
+ */-->
+<import src="../../templates/searchFrom.wxml" />
+<include src="../../templates/articleList/articleList.wxml" />
+<import src="../../templates/loading/threepoint.wxml" />
+<import src="../../templates/copyright.wxml" />
+
+
+<view style="display:{{isArticlesList?'block':'none'}}">
+  <template is="tempSearchFrom" />
+  <view class="list-container">
+    <template is="{{listStyle === 'waterFlowArticle' ? 'rightThumbnailArticle' : listStyle}}" data="{{articlesList}}" />
+    <view style='display:{{isLoading?"block":"none"}}'>
+      <template is="threepoint" />
+    </view>
+    <view class="no-more" style="display:{{isLastPage?'block':'none'}}">- 到底啦 -</view>
+    <view class="copyright">{{memberUserInfo.level}}
+      <template is="tempCopyright" data="{{copyright}}" />
+    </view>
+  </view>
+</view>

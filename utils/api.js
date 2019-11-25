@@ -1,316 +1,898 @@
 /*
  * 
- * WordPres版微信小程序
+ * 微慕小程序
  * author: jianbo
- * organization: 守望轩  www.watch-life.net
- * github:    https://github.com/iamxjb/winxin-app-watch-life.net
- * 技术支持微信号：iamxjb
- * 开源协议：MIT
- * Copyright (c) 2017 https://www.watch-life.net All rights reserved.
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.
  */
 
 
-import config from 'config.js';
+import config from 'config.js'
+
 var domain = config.getDomain;
-var pageCount = config.getPageCount;
-var categoriesID = config.getCategoriesID;
-var indexListType = config.getIndexListType;
-var HOST_URI = 'https://' + domain+'/wp-json/wp/v2/';
-var HOST_URI_WATCH_LIFE_JSON = 'https://' + domain + '/wp-json/watch-life-net/v1/';
-   
-module.exports = {  
-  // 获取文章列表数据
-  getPosts: function (obj) {
-      var url = HOST_URI + 'posts?per_page=' + pageCount+'&orderby=date&order=desc&page=' + obj.page;
+var confgPageCount = config.getPageCount;
+var HOST_URI = 'https://' + domain + '/wp-json/wp/v2/';
+var HOST_URI_MINAPPER = 'https://' + domain + '/wp-json/minapper/v1/';
+var BBP_API = 'https://' + domain + '/wp-json/bbp-api/v1/';
+const API = require('./request.js')
+
+module.exports = {
+  //获取首页所以或最新数据
+  getHomeNewData: function (args) {
+    var pageCount = confgPageCount;
+    if (args.pageCount != null) {
+      pageCount = args.pageCount;
+    }
+    var url = HOST_URI_MINAPPER + 'posts/newslist?per_page=' + pageCount + '&orderby=date&order=desc&page=' + args.page;
     
-    if (obj.categories != 0) {
-      url += '&categories=' + obj.categories;
+    return API.get(url, {});
+  },
+  //获取商品数据
+  getHomeGoodsData: function (args) {
+    var pageCount = confgPageCount;
+    if (args.pageCount != null) {
+      pageCount = args.pageCount;
     }
-    else if (obj.search != '') {
-      url += '&search=' + encodeURIComponent(obj.search);
+    var url = HOST_URI_MINAPPER + 'posts/procucts?per_page=' + pageCount + '&orderby=date&order=desc&page=' + args.page;
+
+    return API.get(url, {});
+  },
+  //获取某一类别下商品数据
+  getTabGoodsData: function (args) {   
+    
+    var pageCount = confgPageCount;
+    if (args.pageCount != null) {
+      pageCount = args.pageCount;
     }
-    else{
-        if (indexListType !='all')
-        {
-            url += '&categories=' + indexListType;
-        }
-    }     
-    return url;
+    var url = HOST_URI_MINAPPER + 'posts/procucts?per_page=' + pageCount + '&orderby=date&order=desc&page=' + args.page + '&cate=' + args.cate;
 
+    return API.get(url, {});
   },
-  // 获取多个分类文章列表数据
-  getPostsByCategories: function (categories) {
-      var url = HOST_URI + 'posts?per_page=20&orderby=date&order=desc&page=1&categories=' + categories;
-      return url;
-  },
-// 获取置顶的文章
-  getStickyPosts: function () {
-    var url = HOST_URI + 'posts?sticky=true&per_page=5&page=1';
-    return url;
-
-  },
- 
   
+  // 获取文章列表数据
+  getPosts: function (args) {
+    var url = '';
+    var pageCount = confgPageCount;
+    var postype = "post";
+    if (args.postype) {
+      postype = args.postype;
+    }
+    if (args.pageCount != null) {
+      pageCount = args.pageCount;
+    }
+    if (args.isCategory) {
+      url = HOST_URI + 'posts?per_page=' + pageCount + '&orderby=date&order=desc&page=' + args.page;
+      if (args.listName == 'articlesList' || args.listName == null) {
+        url += '&categories=' + args.categoryIds;
+      }
+      else if (args.listName == 'productsList') //获取产品
+      {
+        url = HOST_URI_MINAPPER + 'posts/procucts?per_page=' + pageCount + '&page=' + args.page;
+
+      }
+      else if (args.listName == 'newsList')//获取资讯
+      {
+        url = HOST_URI_MINAPPER + 'posts/news?per_page=' + pageCount + '&page=' + args.page;
+
+      }
+      else if (args.listName == 'billboardList')//获取公告
+      {
+        url = HOST_URI_MINAPPER + 'posts/billboard?per_page=' + pageCount + '&page=' + args.page;
+
+      }
+      else if (args.listName == 'productcaseList')//获取产品案例
+      {
+        url = HOST_URI_MINAPPER + 'posts/productcase?per_page=' + pageCount + '&page=' + args.page;
+
+      }
+      else if (args.listName == 'userpostsList' && args.userId)//获取用户文章和话题
+      {
+
+        url = HOST_URI_MINAPPER + 'posts/userposts?userid=' + args.userId + '&postype=' + postype + '&per_page=' + pageCount + '&page=' + args.page;
+
+      }
+
+    }
+    else if (args.isSearch) {
+      url = HOST_URI + 'posts?per_page=' + pageCount + '&orderby=date&order=desc&page=' + args.page;
+      url += '&search=' + encodeURIComponent(args.searchKey);
+    }
+    else if (args.isTag) {
+      url = HOST_URI + 'posts?per_page=' + pageCount + '&orderby=date&order=desc&page=' + args.page;
+      url += '&tags=' + args.tag;
+    }
+    else {
+      url = HOST_URI + 'posts?per_page=' + pageCount + '&orderby=date&order=desc&page=' + args.page;
+    }
+    return API.get(url, {});
+  },
+
+  getPages: function (args) {
+    var url = '';
+    // 获取特定页面
+    if (args.postType == 'about') {
+      url += HOST_URI_MINAPPER + 'pages/about';
+    }
+    else
+    {
+
+      url = HOST_URI + 'pages?per_page=' + args.pageCount + '&orderby=date&order=desc&page=' + args.page;
+    }
+    return API.get(url, {});
+
+  },
+
+  publishPost: function (args) {
+    var url = HOST_URI_MINAPPER;
+    url += 'posts';
+    return API.post(url, args);
+
+  },
+
+  pubGoodslishPost: function (args) {
+    var url = HOST_URI_MINAPPER;
+    url += 'posts/saveproduct';
+    return API.post(url, args);
+  },
+
+  //文章自定义表单
+  publishForm: function (args) {
+    var url = HOST_URI_MINAPPER;
+    url += 'form';
+    return API.post(url, args);
+
+  },
+  //获取我的留言
+  getMymesage: function (args) {
+    var url = HOST_URI_MINAPPER;
+    var sessionId = args.sessionId;
+    var userId = args.userId;
+    url += 'form/mymessage?sessionid=' + sessionId + "&userid=" + userId;
+    return API.get(url, {});
+
+  },
+
+  //获取自定义字段
+  getFormField: function (args) {
+    var url = HOST_URI_MINAPPER;
+    var category = args.category;
+    var displayType = args.displayType;
+    url += 'form/fields';
+    if (category != '' && displayType != '') {
+      url += '?displayType=' + displayType + '&category=' + category;
+    }
+
+    return API.get(url, {});
+
+  },
+  
+  
+  // 获取标签列表
+  getTags: function (args) {
+    var url = HOST_URI + 'tags?per_page=' + args.pageCount + '&orderby=count&order=desc&page=' + args.page;
+    return API.get(url, {});
+
+  },
+  //获取推荐标签
+  getRecommendTags: function (tagtype) {
+    var url = HOST_URI_MINAPPER+ 'tags?tagtype='+tagtype;
+    return API.get(url, {});
+
+  },
+
   //获取首页滑动文章
   getSwiperPosts: function () {
-      var url = HOST_URI_WATCH_LIFE_JSON;
-      url +='post/swipe';
-      return url;
+    var url = HOST_URI_MINAPPER;
+    url += 'posts/slide';
+    return API.get(url);
   },
 
-  //获取是否开启评论的设置
-  getEnableComment: function () {
-      var url = HOST_URI_WATCH_LIFE_JSON;
-      url += 'options/enableComment';
-      return url;
+  //获取动态滑动文章
+  getSwiperTopics: function () {
+    var url = HOST_URI_MINAPPER;
+    url += 'topics/slide';
+    return API.get(url);
   },
 
-  // 获取tag相关的文章列表
-  getPostsByTags: function (id,tags) {
-      var url = HOST_URI + 'posts?per_page=5&&page=1&exclude=' + id + "&tags=" + tags;
-
-      return url;
-
-  },
-
-
-  // 获取特定id的文章列表
-  getPostsByIDs: function (obj) {
-    var url = HOST_URI + 'posts?include=' + obj;
-
-    return url;
-
+  //获取随机文章
+  getRandPosts: function () {
+    var url = HOST_URI_MINAPPER;
+    url += 'posts/rand';
+    return API.get(url);
   },
   // 获取特定slug的文章内容
-  getPostBySlug: function (obj) {
-      var url = HOST_URI + 'posts?slug=' + obj;
-
-      return url;
+  getPostBySlug: function (slug) {
+    var url = HOST_URI + 'posts?slug=' + slug;
+    return API.get(url);
 
   },
-  // 获取内容页数据
-  getPostByID: function (id) {
-    
-    return HOST_URI + 'posts/' + id;
-  },
-  // 获取页面列表数据
-  getPages: function () {
-    
-    return HOST_URI + 'pages';
+  //文章点赞
+  postLike: function (args) {
+    var url = HOST_URI_MINAPPER;
+    url += 'posts/like';
+    return API.post(url, args);
   },
 
-  // 获取页面列表数据
-  getPageByID: function (id, obj) {
-    return HOST_URI + 'pages/' + id;
+
+  // 获取文章内容
+  getPostById: function (id) {
+    var url = HOST_URI + 'posts/' + id;
+    return API.get(url);
+  },
+
+  //获取商品详情内容
+  getGoodsPageById: function(args) {
+    var url = HOST_URI_MINAPPER + 'posts/productview/' + args.id;
+    if (args.userId) {
+      url += "?userid=" + args.userId;
+    }
+
+    if (args.sessionId) {
+      url += "&sessionid=" + args.sessionId;
+
+    }
+    return API.get(url);
+  },
+
+
+  //获取文章或页面的内容
+  getPostOrPageById: function (args) {
+    var url = HOST_URI;
+    if (args.postType == "post") {
+
+      url += 'posts/' + args.id;
+      if (args.userId) {
+        url += "?userid=" + args.userId;
+      }
+
+      if (args.sessionId) {
+        url += "&sessionid=" + args.sessionId;
+
+      }
+
+
+    }
+    else if (args.postType == "page") {
+      url += 'pages/' + args.id;
+    }
+    else if (args.postType == "postPending") {
+      url = HOST_URI_MINAPPER + 'posts/' + args.id + '/pending?userid=' + args.userId + "&sessionid=" + args.sessionId;
+    }
+    else if (args.postType == "topicPending") {
+      url = HOST_URI_MINAPPER + 'topics/' + args.id + '/pending?userid=' + args.userId + "&sessionid=" + args.sessionId;
+
+    }
+    return API.get(url);
+  },
+  //删除文章
+  deletePostById: function (args) {
+    var url = HOST_URI_MINAPPER;
+    url += 'posts/' + args.id + '/delete';
+    return API.post(url, args);
+
+  },
+  //审核文章
+  approvePostById: function (args) {
+    var url = HOST_URI_MINAPPER;
+    url += 'posts/' + args.id + '/approve';
+    return API.post(url, args);
+
+  },
+  //删除文章评论
+  deleteCommentById: function (args) {
+    var url = HOST_URI_MINAPPER;
+    url += 'comments/' + args.id + '/delete';
+    return API.post(url, args);
+
+  },
+  //审核文章评论
+  approveCommentById: function (args) {
+    var url = HOST_URI_MINAPPER;
+    url += 'comments/' + args.id + '/approve';
+    return API.post(url, args);
+
+  },
+  commentsPending: function (args) {
+    var url = HOST_URI_MINAPPER;
+    if (args.posttype == "post") {
+      url += 'comments/pending';
+
+    }
+    else if (args.posttype == "topic") {
+      url += 'replies/pending';
+    }
+
+    url += "?userid=" + args.userid + "&sessionid=" + args.sessionid;
+    return API.get(url, args);
+
+  },
+  //删除话题
+  deleteTopicById: function (args) {
+    var url = HOST_URI_MINAPPER;
+    url += 'topics/' + args.id + '/delete';
+    return API.post(url, args);
+
+  },
+  //审核话题
+  approveTopicById: function (args) {
+    var url = HOST_URI_MINAPPER;
+    url += 'topics/' + args.id + '/approve';
+    return API.post(url, args);
+
+  },
+  //删除话题回复
+  deleteReplyById: function (args) {
+    var url = HOST_URI_MINAPPER;
+    url += 'replies/' + args.id + '/delete';
+    return API.post(url, args);
+
+  },
+  //审核话题
+  approveReplyById: function (args) {
+    var url = HOST_URI_MINAPPER;
+    url += 'replies/' + args.id + '/approve';
+    return API.post(url, args);
+
   },
   //获取分类列表
-  getCategories: function () {
-      var url ='';
-      if (categoriesID =='all'){
-          
-          url = HOST_URI + 'categories?per_page=100&orderby=count&order=desc';
-      }
-      else
-      {
-          url = HOST_URI + 'categories?include=' + categoriesID+'&orderby=count&order=desc';
- 
-      }
-   
-    return url
+  getCategories: function (args) {
+    //var url =url = HOST_URI + 'categories?per_page=100&orderby=count&order=desc';
+    var cateType = args.cateType;
+    var url = HOST_URI_MINAPPER + 'categories';
+    if (cateType && cateType != "all") {
+
+      url += "/" + cateType;
+
+    }
+    return API.get(url, {});
+  },
+  //获取TAB分类列表
+  getTabCategories: function (args) {
+    var cateType = args.cateType;
+    var url = HOST_URI_MINAPPER + 'categories/newcate';
+    if (cateType && cateType != "all") {
+
+      url += "/" + cateType;
+
+    }
+    return API.get(url, {});
+  },
+  //获取商品分类列表
+  getGoodsCategories: function (args) {
+    //var url =url = HOST_URI + 'categories?per_page=100&orderby=count&order=desc';
+    var cateType = args.cateType;
+    var url = HOST_URI_MINAPPER + 'procate';
+    if (cateType && cateType != "all") {
+
+      url += "/" + cateType;
+
+    }
+    return API.get(url, {});
   },
   //获取某个分类信息
-  getCategoryByID: function (id) {
-    var dd = HOST_URI + 'categories/' + id;
-    return HOST_URI + 'categories/'+id;
+  getCategoryById: function (args) {
+    var url = HOST_URI + 'categories/' + args.categoryIds;
+    return API.get(url);
   },
-  //获取某文章评论
-  getComments: function (obj) {
-    var url = HOST_URI + 'comments?per_page=100&orderby=date&order=asc&post=' + obj.postID + '&page=' + obj.page;
-    return url;
-  },
-
   //获取文章评论及其回复
-  getCommentsReplay: function (obj) {
-      var url = HOST_URI_WATCH_LIFE_JSON;
-      url += 'comment/getcomments?postid=' + obj.postId + '&limit=' + obj.limit + '&page=' + obj.page + '&order=desc';
-      return url;
-  },
-  //获取网站的最新20条评论
-  getNewComments: function () {
-      return HOST_URI + 'comments?parent=0&per_page=20&orderby=date&order=desc';
-  },
+  getCommentsReplay: function (args) {
+    var url = HOST_URI_MINAPPER;
 
-  //获取回复
-  getChildrenComments: function (obj) {
-    var url= HOST_URI + 'comments?parent_exclude=0&per_page=100&orderby=date&order=desc&post=' + obj.postID
-     return url;
-  },
-
-
-  //获取最近的30个评论
-  getRecentfiftyComments:function(){
-    return HOST_URI + 'comments?per_page=30&orderby=date&order=desc'
-  },
-
-  //提交评论
-  postComment: function () {
-    return HOST_URI + 'comments'
-  }, 
-
-  //提交微信评论
-  postWeixinComment: function () {
-    var url = HOST_URI_WATCH_LIFE_JSON;
-    return url + 'comment/add'
-  }, 
-
-  //获取微信评论
-  getWeixinComment: function (openid) {
-      var url = HOST_URI_WATCH_LIFE_JSON;
-      return url + 'comment/get?openid=' + openid;
-  },    
-
-  //获取文章的第一个图片地址,如果没有给出默认图片
-  getContentFirstImage: function (content){
-    var regex = /<img.*?src=[\'"](.*?)[\'"].*?>/i;
-    var arrReg = regex.exec(content);
-    var src ="../../images/logo700.png";
-    if(arrReg){   
-      src=arrReg[1];
+    if (args.flag == 'postcomment') {
+      url += 'comments?postid=' + args.postId + '&limit=' + args.limit + '&page=' + args.page + '&order=desc';
     }
-    return src;  
+    else if (args.flag == 'newcomment') {
+      url = url + 'comments/new?limit=' + args.limit + '&page=' + args.page;
+    }
+    return API.get(url);
+  },
+  //获取我的评论文章
+  getMyComments: function (args) {
+    var url = HOST_URI_MINAPPER;
+    var userId = args.userId;
+    var sessionId = args.sessionId
+    url = url + 'posts/mycomments?userid=' + userId + "&sessionid=" + sessionId;
+    return API.get(url);
   },
 
- //获取热点文章
-  getTopHotPosts(flag){      
-      var url = HOST_URI_WATCH_LIFE_JSON;
-      if(flag ==1)
-      {
-          url +="post/hotpostthisyear"
-      }
-      else if(flag==2)
-      {
-          url += "post/pageviewsthisyear"
-      }
-      else if (flag == 3) {
-          url += "post/likethisyear"
-      }
-      else if (flag == 4) {
-          url += "post/praisethisyear"
-      }
-
-      return url;
+  //获取我的点赞文章
+  getMyLikes: function (args) {
+    var url = HOST_URI_MINAPPER;
+    var userId = args.userId;
+    var sessionId = args.sessionId
+    url = url + 'posts/mylikes?userid=' + userId + "&sessionid=" + sessionId;
+    return API.get(url);
+  },
+  //获取我鼓励的文章
+  getMyPrainses: function (args) {
+    var url = HOST_URI_MINAPPER;
+    var userId = args.userId;
+    var sessionId = args.sessionId
+    url = url + 'posts/mypraises?userid=' + userId + "&sessionid=" + sessionId;
+    return API.get(url);
   },
 
-  //更新文章浏览数
-  updatePageviews(id) {
-      var url = HOST_URI_WATCH_LIFE_JSON;
-      url += "post/addpageview/"+id;
-      return url;
+  //提交文章评论及回复
+  postCommentsReplay: function (args) {
+    var url = HOST_URI_MINAPPER;
+    url += 'comments';
+    return API.post(url, args);
   },
-  //获取用户openid
-  getOpenidUrl() {
-    var url = HOST_URI_WATCH_LIFE_JSON;
-    url += "weixin/getopenid";
-    return url;
+  //回复模板消息
+  postRepalyMessage: function (args) {
+    var url = HOST_URI_MINAPPER;
+    url += 'templatemessage/send';
+    return API.post(url, args);
   },
-
-   //获取用户信息
-   getUpdateUserInfo() {
-    var url = HOST_URI_WATCH_LIFE_JSON;
-    url += "weixin/updateuserinfo";
-    return url;
+  //鼓励模板消息
+  sentMessage: function (args) {
+    var url = HOST_URI_MINAPPER;
+    url += 'templatemessage/send';
+    return API.post(url, args);
   },
-
-  //点赞
-  postLikeUrl() {
-    var url = HOST_URI_WATCH_LIFE_JSON;
-    url += "post/like";
-    return url;
+  //用户登录
+  userLogin: function (args) {
+    var url = HOST_URI_MINAPPER;
+    url += "users/login";
+    return API.post(url, args);
   },
 
-  //判断当前用户是否点赞
-  postIsLikeUrl() {
-    var url = HOST_URI_WATCH_LIFE_JSON;
-    url += "post/islike";
-    return url;
+  //获取会员信息
+  getMemberUserInfo: function (args) {
+    var url = HOST_URI_MINAPPER;
+    url += "users/session";
+    return API.get(url, args);
   },
 
-  //获取我的点赞
-  getMyLikeUrl(openid) {
-      var url = HOST_URI_WATCH_LIFE_JSON;
-      url += "post/mylike?openid=" + openid;
-      return url;
+  //获取用户信息
+  getUserInfo: function (args) {
+    var url = HOST_URI_MINAPPER;
+    var id = args.userId;
+    var userId = args.curLoginUserId;
+    var sessionId = args.curLoginSessionId;
+    url += "users/" + id + "?userid=" + userId + "&sessionid=" + sessionId;
+    return API.get(url, args);
   },
 
-  //鼓励,获取支付密钥
-  postPraiseUrl() { 
-    var url = HOST_URI_WATCH_LIFE_JSON;  
-    url += "payment";
-    return url;
+  //更新信息
+  updateSession: function (args) {
+    var url = HOST_URI_MINAPPER;
+    var userId = args.userId;
+    var sessionId = args.sessionId;
+    url += "users/updatesession?userid=" + userId + "&sessionid=" + sessionId;
+    return API.get(url);
   },
 
-  //更新鼓励数据
-  updatePraiseUrl() {
-    var url = HOST_URI_WATCH_LIFE_JSON;
-    url += "post/praise";
-    return url;
-  },
-
-  //获取我的鼓励数据
-  getMyPraiseUrl(openid) {
-      var url = HOST_URI_WATCH_LIFE_JSON;
-      url += "post/mypraise?openid=" + openid;
-      return url;
-  },
-
-  //获取所有的鼓励数据
-  getAllPraiseUrl() {
-      var url = HOST_URI_WATCH_LIFE_JSON;
-      url += "post/allpraise";
-      return url;
-  },
-
-  //发送模版消息
-  sendMessagesUrl() {
-      var url = HOST_URI_WATCH_LIFE_JSON;
-      url += "weixin/sendmessage";
-      return url;
-  },
-  //获取订阅的分类
-  getSubscription() {
-      var url = HOST_URI_WATCH_LIFE_JSON;
-      url += "category/getsubscription";
-      return url;
-  },
-
-  //订阅的分类
-  postSubscription() {
-      var url = HOST_URI_WATCH_LIFE_JSON;
-      url += "category/postsubscription";
-      return url;
-  },
-
-  //删除订阅的分类
-  delSubscription() {
-      var url = HOST_URI_WATCH_LIFE_JSON;
-      url += "category/delSubscription";
-      return url;
-  },
 
   //生成海报
-  creatPoster() {
-      var url = HOST_URI_WATCH_LIFE_JSON;
-      url += "weixin/qrcodeimg";
-      return url;
+  creatPoster: function (id) {
+    var url = HOST_URI_MINAPPER;
+    url += "posts/" + id + "/qrcode";
+    return API.get(url);
   },
-  //获取海报
-  getPosterUrl() {
-      var url = 'https://' + domain + "/wp-content/plugins/rest-api-to-miniprogram/poster/";
-      return url;
+
+  //提交支付
+  postPayment: function (args) {
+    var url = HOST_URI_MINAPPER;
+    url += "payment";
+    return API.post(url, args);
+
   },
-  //获取二维码
-  getPosterQrcodeUrl() {
-      var url = 'https://' + domain + "/wp-content/plugins/rest-api-to-miniprogram/qrcode/";
-      return url;
+  //消耗积分阅读
+  postIntegral: function (args) {
+    var url = HOST_URI_MINAPPER;
+    url += "payment/integral";
+    return API.post(url, args);
+
+  },
+
+  getProducts: function (args) {
+    var url = HOST_URI_MINAPPER;
+    url += "products?postid=" + args.postId + "&categoryid=" + args.categoryId;
+    return API.get(url);
+
+  },
+
+  //上传文件
+  uploadFile: function (args) {
+    var url = HOST_URI_MINAPPER;
+    url += "attachments";
+    return API.uploadFile(url, args);
+
+  },
+
+  //删除文件
+  deleteFile: function (args) {
+    var url = HOST_URI_MINAPPER;
+    var postid = args.id;
+    url += "attachments/" + postid + '/delete';
+    return API.post(url, args);
+
+  },
+
+
+
+  //获取设置项
+  getSettings: function () {
+    var url = HOST_URI_MINAPPER;
+    url += "settings";
+    return API.get(url);
+
+  },
+
+  //更新订单状态
+  updateOrderStatus: function (args) {
+    var url = HOST_URI_MINAPPER;
+    url += "orders";
+    return API.post(url, args);
+
+  },
+
+  //更新订单状态
+  getMyOrders: function (args) {
+    var url = HOST_URI_MINAPPER;
+    var userId = args.userId;
+    var sessionId = args.sessionId;
+    url = url + 'orders/myorders?userid=' + userId + "&sessionid=" + sessionId;
+    return API.get(url);
+
+  },
+  //获取热点文章
+  getTopHotPosts(tabtype) {
+    var url = HOST_URI_MINAPPER;
+    url += "posts/hot?type=" + tabtype;
+    return API.get(url);
+  },
+
+  //获取热点话题
+  getTopHotTopics(tabtype) {
+    var url = HOST_URI_MINAPPER;
+    url += "topics/hot?type=" + tabtype;
+    return API.get(url);
+  },
+
+  //获取BBPress板块列表
+  getBBForums: function () {
+    var url = HOST_URI_MINAPPER;
+    url += 'forums'
+    return API.get(url);
+  },
+  //获取BBPress板块列表
+  getBBForumsById: function (args) {
+    var url = HOST_URI_MINAPPER;
+    var id = args.categoryIds;
+    url += 'forums/' + id
+    return API.get(url);
+  },
+  //获取动态圈按类别的列表
+  getBBTopics: function (args) {
+    var url = HOST_URI_MINAPPER;
+    if (args.isCategory) {
+      url += 'forums/' + args.forumId + '?page=' + args.page + '&per_page=' + args.pageCount;
+      if (args.userId && args.sessionId) {
+        url += "&userid=" + args.userId + "&sessionid=" + args.sessionId;
+      }
+
+    }
+    else if (args.isSearch) {
+      url += 'topics/search?s=' + encodeURIComponent(args.searchKey) + '&page=' + args.page + '&per_page=' + args.pageCount;
+      if (args.userId && args.sessionId) {
+        url += "&userid=" + args.userId + "&sessionid=" + args.sessionId;
+      }
+    }
+
+    else if (args.isTag) {
+      url += 'topics/tag/' + args.tag + '?page=' + args.page + '&per_page=' + args.pageCount;
+      if (args.userId && args.sessionId) {
+        url += "&userid=" + args.userId + "&sessionid=" + args.sessionId;
+      }
+    }
+    return API.get(url);
+  },
+
+  // 获取动态圈首页列表
+  getBBTopicsByID: function (args) {
+    var url = HOST_URI_MINAPPER;
+    url += 'topics';
+    if (args.forumId != 0) {
+      url += '/' + args.forumId;
+      if (args.userId && args.sessionId) {
+        url += "&userid=" + args.userId + "&sessionid=" + args.sessionId;
+      }
+    }
+    else {
+      url += '?page=' + args.page + '&per_page=' + args.pageCount;
+      if (args.userId && args.sessionId) {
+        url += "&userid=" + args.userId + "&sessionid=" + args.sessionId;
+      }
+    }
+    return API.get(url);
+  },
+
+  // 获取动态圈详情
+  getBBTopicByID: function (args) {
+    var url = HOST_URI_MINAPPER;
+    url += 'topics';
+    if (args.topicId != 0) {
+
+      url += '/' + args.topicId;
+
+      if (args.userId) {
+        url += "?userid=" + args.userId;
+      }
+
+      if (args.sessionId) {
+        url += "&sessionid=" + args.sessionId;
+
+      }
+    }
+
+
+
+    return API.get(url);
+  },
+
+  //提交话题
+  postBBTopic: function (id, args) {
+    var url = HOST_URI_MINAPPER;
+    url += 'forums/' + id;
+    return API.post(url, args);
+  },
+
+
+  //提交话题回复
+  replyBBTopicByID: function (id, args) {
+    var url = HOST_URI_MINAPPER;
+    url += 'topics/' + id;
+    return API.post(url, args);
+  },
+
+  getReplayTopicById: function (args) {
+    var url = HOST_URI_MINAPPER;
+    url += 'topics/getReplayTopicById?id=' + args.topicId + "&page=" + args.page + "&per_page=" + args.per_page;
+    return API.get(url);
+  },
+
+  getMylikeTopics: function (args) {
+    var url = HOST_URI_MINAPPER;
+    var userId = args.userId;
+    var sessionId = args.sessionId;
+    url += 'topics/mylike?userid=' + userId + "&sessionid=" + sessionId;
+    return API.get(url);
+  },
+
+  getMyreplayTopics: function (args) {
+    var url = HOST_URI_MINAPPER;
+    var userId = args.userId;
+    var sessionId = args.sessionId;
+    url += 'topics/myreplay?userid=' + userId + "&sessionid=" + sessionId;
+    return API.get(url);
+  },
+
+  getPraisesTopics: function (args) {
+    var url = HOST_URI_MINAPPER;
+    var userId = args.userId;
+    var sessionId = args.sessionId;
+    url += 'topics/mypraises?userid=' + userId + "&sessionid=" + sessionId;
+    return API.get(url);
+  },
+
+  // 获取BBPress搜索数据
+  getBBTopicsBySearch: function (obj) {
+    var url = HOST_URI_MINAPPER;
+    url = url + 'topics/search?s=' + encodeURIComponent(obj.search);
+    return url;
+  },
+
+  // 签到
+  signin: function (args) {
+    var url = HOST_URI_MINAPPER;
+    var userId = args.userId;
+    var sessionId = args.sessionId;
+    url = url + 'users/signin?userid=' + userId + "&sessionid=" + sessionId;
+    return API.get(url);
+  },
+
+  // 获取我的任务状态
+  myTask: function (args) {
+    var url = HOST_URI_MINAPPER;
+    var userId = args.userId;
+    var sessionId = args.sessionId;
+    url = url + 'users/mytask?userid=' + userId + "&sessionid=" + sessionId;
+    return API.get(url);
+  },
+
+  //我的任务观看激励视频
+  openAdVideo: function (args) {
+    var url = HOST_URI_MINAPPER;
+    var userId = args.userId;
+    var sessionId = args.sessionId;
+    url = url + 'users/openAdVideo?userid=' + userId + "&sessionid=" + sessionId;
+    return API.get(url);
+  },
+
+  //我的分享任务
+  shareApp: function (args) {
+    var url = HOST_URI_MINAPPER;
+    var userId = args.userId;
+    var sessionId = args.sessionId;
+    url = url + 'users/shareapp?userid=' + userId + "&sessionid=" + sessionId;
+    return API.get(url);
+  },
+
+  //我的积分
+  myIntegral: function (args) {
+    var url = HOST_URI_MINAPPER;
+    var userId = args.userId;
+    var sessionId = args.sessionId;
+    url = url + 'users/myIntegral?userid=' + userId + "&sessionid=" + sessionId + "&page=" + args.page + "&per_page=" + args.per_page;;
+
+    return API.get(url);
+  },
+
+  integralRanking: function () {
+    var url = HOST_URI_MINAPPER;
+
+    url = url + 'users/integralRanking';
+
+    return API.get(url);
+  },
+
+  followRanking: function () {
+    var url = HOST_URI_MINAPPER;
+    url = url + 'users/followRanking';
+    return API.get(url);
+  },
+
+  getUsersLocations: function () {
+    var url = HOST_URI_MINAPPER;
+    url = url + 'users/locations';
+    return API.get(url);
+  },
+  //获取网站的最新评论
+  getNewComments: function (args) {
+    //var url=  HOST_URI + 'comments?parent=0&per_page=30&orderby=date&order=desc';
+    var url = HOST_URI_MINAPPER;
+    url = url + 'comments/new?limit=' + args.limit + '&page=' + args.page;
+    return API.get(url);
+  },
+
+  //获取视频信息
+  getVideoInfo: function (args) {
+    //var url=  HOST_URI + 'comments?parent=0&per_page=30&orderby=date&order=desc';
+    var url = HOST_URI_MINAPPER + 'media/';
+    var userId = args.userId;
+    var sessionId = args.sessionId;
+    if (args.infoType == "video_douyin") {
+      url = url + 'douyin?url=' + args.infoUrl + '&userid=' + userId + "&sessionid=" + sessionId;;
+    }
+
+    return API.get(url);
+
+  },
+
+  getWeibo: function (args) {
+    var url = HOST_URI_MINAPPER + 'media/';
+    var userId = args.userId;
+    var sessionId = args.sessionId;
+    url = url + 'weibo?url=' + args.infoUrl + '&userid=' + userId + "&sessionid=" + sessionId;
+    return API.get(url);
+
+  },
+
+  getToutiao: function (args) {
+    var url = HOST_URI_MINAPPER + 'media/';
+    var userId = args.userId;
+    var sessionId = args.sessionId;
+    url = url + 'toutiao?url=' + args.infoUrl + '&userid=' + userId + "&sessionid=" + sessionId;
+    return API.get(url);
+
+  },
+
+  followAuthor: function (args) {
+    var url = HOST_URI_MINAPPER + 'users/';
+    var id = args.id;
+    var flag = args.flag
+    var data = {};
+    data.sessionid = args.sessionId;
+    data.userid = args.userId;
+    if (!flag) {
+      url += id + "/follow";
+    }
+    else {
+      url += id + "/unfollow";
+
+    }
+    return API.post(url, data);
+
+  },
+
+  getMyFollowAuthor: function (args) {
+    var url = HOST_URI_MINAPPER + 'users/myFollowAuthors';
+    url += '?userid=' + args.userId + "&sessionid=" + args.sessionId + "&page=" + args.page + "&per_page=" + args.per_page;
+    return API.get(url);
+
+  },
+  getFollowmeAuthors: function (args) {
+    var url = HOST_URI_MINAPPER + 'users/followmeAuthors';
+    url += '?userid=' + args.userId + "&sessionid=" + args.sessionId + "&page=" + args.page + "&per_page=" + args.per_page;
+    return API.get(url);
+
+  },
+
+  getAuthorList: function (args) {
+    var url = HOST_URI_MINAPPER + 'users/authorlist';
+    url += '?userid=' + args.userId + "&sessionid=" + args.sessionId + "&page=" + args.authorlistPage + "&per_page=" + args.per_page;;
+    return API.get(url);
+
+  },
+  //圈子关注朋友的话题列表
+  getMyFollowAuthorTopics: function (args) {
+    var url = HOST_URI_MINAPPER + 'topics/myFollowAuthors';
+    url += '?userid=' + args.userId + "&sessionid=" + args.sessionId + "&page=" + args.authorPage + "&per_page=" + args.per_page;
+    return API.get(url);
+
+  },
+  getAttachments: function (args) {
+    // var url = HOST_URI_MINAPPER + 'users/attachments';
+    var url = HOST_URI_MINAPPER + 'attachments';
+    if (args.usertype == "my") {
+      url += '/myattachments';
+      url += '?userid=' + args.userId + "&sessionid=" + args.sessionId + "&page=" + args.page + "&per_page=" + args.per_page;
+
+      if (args.filetype) {
+        url += '&filetype=' + args.filetype;
+      }
+    }
+    else {
+      if (args.filetype) {
+        url += '?filetype=' + args.filetype+ "&page=" + args.page + "&per_page=" + args.per_page;
+      }
+    }
+    return API.get(url);
+  },
+  getMyFollowAuthorsTopics: function (args) {
+    var url = HOST_URI_MINAPPER + 'topics/myfollowAuthors';
+    url += '?userid=' + args.userId + "&sessionid=" + args.sessionId + "&page=" + args.page + "&per_page=" + args.per_page;
+    return API.get(url);
+
+  },
+
+
+
+  getMyzanImage: function (args) {
+    var url = HOST_URI_MINAPPER + 'users/myZanImage';
+    url += '?userid=' + args.userId + "&sessionid=" + args.sessionId;
+    return API.get(url);
+
+  },
+
+  getPostPending: function (args) {
+    var url = HOST_URI_MINAPPER + 'posts/pending';
+    url += '?userid=' + args.userId + "&sessionid=" + args.sessionId;
+    return API.get(url);
+
+  },
+  getTopicPending: function (args) {
+    var url = HOST_URI_MINAPPER + 'topics/pending';
+    url += '?userid=' + args.userId + "&sessionid=" + args.sessionId;
+    return API.get(url);
+  },
+  subscribeMessage:function(args)
+  {
+    var url = HOST_URI_MINAPPER + 'users/subscribeMessage';
+     //console.log(url);
+    return API.post(url, args);
+    
+  },
+  sendSubscribeMessage:function(args)
+  {
+    var url = HOST_URI_MINAPPER + 'templatemessage/sendSubscribeMessage';
+     //console.log(url);
+    return API.post(url, args);
+    
   }
+
+
 };

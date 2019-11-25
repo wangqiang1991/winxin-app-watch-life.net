@@ -1,1 +1,11 @@
-{"enablePullDownRefresh": true}
+{
+    "enablePullDownRefresh": true,
+    "backgroundTextStyle": "dark",
+    "usingComponents": {
+      "water-flow": "../../vendor/LinUI/water-flow/index",
+      "z-water-flow": "../../vendor/LinUI/z-water-flow/index",
+      "l-dialog": "../../vendor/LinUI/dialog/index",
+      "l-notice-bar": "../../vendor/LinUI/notice-bar/index"
+    }
+}
+

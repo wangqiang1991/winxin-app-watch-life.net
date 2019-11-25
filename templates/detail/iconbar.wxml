@@ -1,0 +1,63 @@
+<!--
+/*
+ * 
+ * 微慕小程序
+ * author: jianbo
+ * organization:  微慕 www.minapper.com 
+ * 技术支持微信号：Jianbo
+ * Copyright (c) 2018 https://www.minapper.com All rights reserved.
+ *
+ */-->
+<!--功能图标-->
+<template name="iconbar">
+                    <view class="menu-box {{iconBarShow ?'' :'menu-box-hidden'}}">
+                        <view class="iconList">
+                            <view class="iconLine">
+                                <view style="width:25%; position: relative; float:left; text-align:center">
+                                    <view bindtap="postRefresh">
+                                        <image src="../../images/bottom_bar_refresh.png" class="img-menu"></image>
+                                    </view>
+                                    <view bindtap="postRefresh">
+                                        <text>刷新</text>
+                                    </view>
+
+                                </view>
+                                <view style="width:25%; position: relative; float:left; text-align:center">
+                                    <view bindtap="copyLink">
+                                        <image src="../../images/bottom_bar_copy.png" class="img-menu"></image>
+                                    </view>
+                                    <view bindtap="copyLink">
+                                        <text>复制链接</text>
+                                    </view>
+                                </view>
+                                <!-- <view style="width:20%; float:left; text-align:center">
+                                    <view catchtap="creatPoster">
+                                        <image src="../../images/poster.png"  class="img-menu"></image>
+                                    </view>
+                                    <view catchtap="creatPoster">
+                                        <text>海报</text>
+                                    </view>
+                                </view> -->
+                                <view style="width:25%; float:left; text-align:center">
+                                    <view bindtap="readOriginal">
+                                        <image src="../../images/copy.png" class="img-menu" catchtap="gotoWebpage"></image>
+                                    </view>
+                                    <view bindtap="gotoWebpage">
+                                        <text>阅读原文</text>
+                                    </view>
+                                </view>
+
+                                <view style="width:25%; float:left; ">
+                                    <view>
+                                        <image src="../../images/appreciation.png" catchtap="postPraise" class="img-menu"></image>
+                                    </view>
+                                    <view catchtap="postPraise">
+                                        <text>{{raw_praise_word}}</text>
+                                    </view>
+
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                    </template>
+                    <!--功能图标-->
